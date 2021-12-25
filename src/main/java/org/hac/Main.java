@@ -3,8 +3,10 @@ package org.hac;
 import com.beust.jcommander.JCommander;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hac.lexer.Lexer;
 import org.hac.util.StringUtil;
 
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,7 +43,11 @@ public class Main {
             return;
         }
         try {
-            byte[] input = Files.readAllBytes(path);
+            FileReader reader = new FileReader(path.toFile());
+            Lexer lexer = new Lexer(reader);
+            for(String s;(s= lexer.read())!=null;){
+                System.out.println(s);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

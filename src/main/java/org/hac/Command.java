@@ -6,6 +6,6 @@ public class Command {
     @Parameter(names = {"-h", "--help"}, description = "Help Info", help = true)
     public boolean help;
 
-    @Parameter(names = {"-f","--file"},description = "HacLang")
+    @Parameter(description = "HacLang File")
     public String filename;
 }
