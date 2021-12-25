@@ -6,6 +6,7 @@ import org.hac.token.NumToken;
 import org.hac.token.StrToken;
 import org.hac.token.Token;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
@@ -21,25 +22,26 @@ public class Lexer {
         this.reader = r;
     }
 
-    public Token read() throws Exception {
+    public Token read() throws ParseException {
         if (fillQueue(0)) {
             return queue.remove(0);
-        }
-        else {
+        } else {
             return Token.EOF;
         }
     }
 
-    public Token peek(int i) throws Exception {
-        if (fillQueue(i))
+    public Token peek(int i) throws ParseException {
+        if (fillQueue(i)) {
             return queue.get(i);
-        else
+        } else {
             return Token.EOF;
+        }
     }
-    private boolean fillQueue(int i) throws Exception {
-        while (queue.size()<=i) {
+
+    private boolean fillQueue(int i) throws ParseException {
+        while (queue.size() <= i) {
             Token token = read0();
-            if(token==Token.EOF){
+            if (token == Token.EOF) {
                 return false;
             }
             queue.add(token);
@@ -47,7 +49,7 @@ public class Lexer {
         return true;
     }
 
-    private int getChar() throws Exception {
+    private int getChar() throws IOException {
         if (lastChar == EMPTY) {
             return reader.read();
         } else {
@@ -77,6 +79,14 @@ public class Lexer {
         return c == '\n';
     }
 
+    private static boolean isCalc(int c) {
+        return c == '+' || c == '-' || c == '*' || c == '/' || c == '%';
+    }
+
+    private static boolean isBracket(int c) {
+        return c == '{' || c == '}';
+    }
+
     private static boolean isSem(int c) {
         return c == ';';
     }
@@ -86,78 +96,98 @@ public class Lexer {
         lastChar = c;
     }
 
-    public Token read0() throws Exception {
-        StringBuilder sb = new StringBuilder();
-        int c = getChar();
-        while (isSpace(c)) {
-            c = getChar();
-        }
-        if (c < 0) {
-            return Token.EOF;
-        } else if (isDigit(c)) {
-            sb.append((char) c);
-            c = getChar();
-            while (isDigit(c)) {
-                sb.append((char) c);
+    public Token read0() throws ParseException {
+        try {
+            StringBuilder sb = new StringBuilder();
+            int c = getChar();
+            while (isSpace(c)) {
                 c = getChar();
             }
-        } else if (isLetter(c)) {
-            sb.append((char) c);
-            c = getChar();
-            while (isLetter(c) || isDigit(c)) {
+            if (c < 0) {
+                return Token.EOF;
+            } else if (isDigit(c)) {
                 sb.append((char) c);
                 c = getChar();
-            }
-        } else if (isCR(c)) {
-            c = getChar();
-            if (isLF(c)) {
+                while (isDigit(c)) {
+                    sb.append((char) c);
+                    c = getChar();
+                }
+            } else if (isLetter(c)) {
+                sb.append((char) c);
+                c = getChar();
+                while (isLetter(c) || isDigit(c)) {
+                    sb.append((char) c);
+                    c = getChar();
+                }
+            } else if (c == '"') {
+                sb.append((char) c);
+                c = getChar();
+                while (c != '"') {
+                    sb.append((char) c);
+                    c = getChar();
+                }
+                c = getChar();
+            } else if (isCR(c)) {
+                c = getChar();
+                if (isLF(c)) {
+                    LINE_NUMBER++;
+                    return new IdToken(LINE_NUMBER - 1, Token.EOL);
+                } else {
+                    throw new ParseException("error token");
+                }
+            } else if (isLF(c)) {
                 LINE_NUMBER++;
-                return new IdToken(LINE_NUMBER - 1, "\\r\\n");
+                return new IdToken(LINE_NUMBER - 1, Token.EOL);
+            } else if (c == '=') {
+                c = getChar();
+                if (c == '=') {
+                    return new IdToken(LINE_NUMBER, "==");
+                } else {
+                    ungetChar(c);
+                    return new IdToken(LINE_NUMBER, "=");
+                }
+            } else if (c == '>') {
+                c = getChar();
+                if (c == '=') {
+                    return new IdToken(LINE_NUMBER, ">=");
+                } else {
+                    ungetChar(c);
+                    return new IdToken(LINE_NUMBER, ">");
+                }
+            } else if (c == '<') {
+                c = getChar();
+                if (c == '=') {
+                    return new IdToken(LINE_NUMBER, "<=");
+                } else {
+                    ungetChar(c);
+                    return new IdToken(LINE_NUMBER, "<");
+                }
+            } else if (isCalc(c)) {
+                return new IdToken(LINE_NUMBER, String.valueOf((char) c));
+            } else if (isBracket(c)) {
+                return new IdToken(LINE_NUMBER, String.valueOf((char) c));
+            } else if (isSem(c)) {
+                return new IdToken(LINE_NUMBER, ";");
             } else {
                 throw new ParseException("error token");
             }
-        } else if (isLF(c)) {
-            LINE_NUMBER++;
-            return new IdToken(LINE_NUMBER - 1, "\\n");
-        } else if (c == '=') {
-            c = getChar();
-            if (c == '=') {
-                return new IdToken(LINE_NUMBER, "==");
-            } else {
+            if (c >= 0) {
                 ungetChar(c);
-                return new IdToken(LINE_NUMBER, "=");
             }
-        } else if (c == '>') {
-            c = getChar();
-            if (c == '=') {
-                return new IdToken(LINE_NUMBER, ">=");
+            String temp = sb.toString();
+            if (isLetter(temp.toCharArray()[0])) {
+                return new IdToken(LINE_NUMBER, temp);
+            } else if (isDigit(temp.toCharArray()[0])) {
+                return new NumToken(LINE_NUMBER, Integer.parseInt(temp));
+            } else if (temp.toCharArray()[0] == '"') {
+                temp = temp.substring(1);
+                return new StrToken(LINE_NUMBER, temp);
             } else {
-                ungetChar(c);
-                return new IdToken(LINE_NUMBER, ">");
+                throw new ParseException("error token");
             }
-        } else if (c == '<') {
-            c = getChar();
-            if (c == '=') {
-                return new IdToken(LINE_NUMBER, "<=");
-            } else {
-                ungetChar(c);
-                return new IdToken(LINE_NUMBER, "<");
-            }
-        } else if (isSem(c)) {
-            return new IdToken(LINE_NUMBER, ";");
-        } else {
-            throw new ParseException("error token");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (c >= 0) {
-            ungetChar(c);
-        }
-        String temp = sb.toString();
-        if(isLetter(temp.toCharArray()[0])){
-            return new StrToken(LINE_NUMBER,temp);
-        }else if(isDigit(temp.toCharArray()[0])){
-            return new NumToken(LINE_NUMBER,Integer.parseInt(temp));
-        }else{
-            throw new ParseException("error token");
-        }
+        return Token.EOF;
     }
 }

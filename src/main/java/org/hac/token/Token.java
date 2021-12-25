@@ -4,6 +4,7 @@ import org.hac.exception.HacException;
 
 public abstract class Token {
     public static final Token EOF = new Token(-1){};
+    public static final String EOL = "\\n";
     private final int lineNumber;
 
     protected Token(int line) {
