@@ -1,9 +1,7 @@
 package org.hac.core;
 
 public abstract class Token {
-    public static final Token EOF = new Token(-1) {
-    };
-    public static final String EOL = "\\n";
+    public static final Token EOF = new Token(-1){};
     private final int lineNumber;
 
     protected Token(int line) {

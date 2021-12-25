@@ -3,6 +3,7 @@ package org.hac;
 import com.beust.jcommander.JCommander;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hac.core.Token;
 import org.hac.lexer.Lexer;
 import org.hac.util.StringUtil;
 
@@ -23,32 +24,32 @@ public class Main {
             jc.usage();
             return;
         }
-        if(StringUtil.isEmpty(command.filename)){
+        if (StringUtil.isEmpty(command.filename)) {
             logger.error("filename is null");
             return;
         }
         String extName = StringUtil.getExtName(command.filename);
-        if(StringUtil.isEmpty(extName)){
+        if (StringUtil.isEmpty(extName)) {
             logger.error("extension name is null");
             return;
-        }else{
-            if(!extName.equalsIgnoreCase("hac")){
+        } else {
+            if (!extName.equalsIgnoreCase("hac")) {
                 logger.error("error extension name");
                 return;
             }
         }
         Path path = Paths.get(command.filename);
-        if(!Files.exists(path)){
+        if (!Files.exists(path)) {
             logger.error("file is not exist");
             return;
         }
         try {
             FileReader reader = new FileReader(path.toFile());
             Lexer lexer = new Lexer(reader);
-            for(String s;(s= lexer.read())!=null;){
-                System.out.println(s);
+            for (Token t; (t = lexer.read()) != Token.EOF; ) {
+                System.out.println(t.getLineNumber() + " -> " + t.getClass().getName() + " -> " + t.getText());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
