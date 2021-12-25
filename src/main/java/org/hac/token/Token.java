@@ -1,4 +1,6 @@
-package org.hac.core;
+package org.hac.token;
+
+import org.hac.exception.HacException;
 
 public abstract class Token {
     public static final Token EOF = new Token(-1){};

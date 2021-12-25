@@ -1,4 +1,4 @@
-package org.hac.core;
+package org.hac.token;
 
 public class StrToken extends Token {
     private final String literal;

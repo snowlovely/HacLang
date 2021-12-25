@@ -1,6 +1,6 @@
 package org.hac.ast;
 
-import org.hac.core.Token;
+import org.hac.token.Token;
 
 import java.util.ArrayList;
 import java.util.Iterator;

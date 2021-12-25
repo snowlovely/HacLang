@@ -1,6 +1,10 @@
 package org.hac.lexer;
 
-import org.hac.core.*;
+import org.hac.exception.ParseException;
+import org.hac.token.IdToken;
+import org.hac.token.NumToken;
+import org.hac.token.StrToken;
+import org.hac.token.Token;
 
 import java.io.Reader;
 import java.util.ArrayList;

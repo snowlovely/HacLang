@@ -1,4 +1,6 @@
-package org.hac.core;
+package org.hac.exception;
+
+import org.hac.token.Token;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package org.hac.core;
+package org.hac.token;
 
 public class NumToken extends Token {
     private final int value;

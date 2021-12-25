@@ -3,7 +3,7 @@ package org.hac;
 import com.beust.jcommander.JCommander;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.hac.core.Token;
+import org.hac.token.Token;
 import org.hac.lexer.Lexer;
 import org.hac.util.StringUtil;
 
