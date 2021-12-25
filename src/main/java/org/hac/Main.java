@@ -41,7 +41,6 @@ public class Main {
             return;
         }
         try {
-            // https://github.com/EmYiQing/HacLang
             byte[] input = Files.readAllBytes(path);
         }catch (Exception e){
             e.printStackTrace();
