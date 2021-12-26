@@ -123,8 +123,16 @@ public class Lexer {
                 sb.append((char) c);
                 c = getChar();
                 while (c != '"') {
-                    sb.append((char) c);
-                    c = getChar();
+                    if (c == '\\') {
+                        c = getChar();
+                        if (c == '"') {
+                            sb.append((char) c);
+                            c = getChar();
+                        }
+                    } else {
+                        sb.append((char) c);
+                        c = getChar();
+                    }
                 }
                 c = getChar();
             } else if (isCR(c)) {
