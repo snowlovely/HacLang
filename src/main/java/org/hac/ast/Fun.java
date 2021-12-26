@@ -15,6 +15,7 @@ public class Fun extends ASTList {
         return (BlockStmt) child(1);
     }
 
+    @Override
     public String toString() {
         return "(fun " + parameters() + " " + body() + ")";
     }

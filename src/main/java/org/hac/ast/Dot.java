@@ -11,6 +11,7 @@ public class Dot extends Postfix {
         return ((ASTLeaf) child(0)).token().getText();
     }
 
+    @Override
     public String toString() {
         return "." + name();
     }

@@ -13,11 +13,12 @@ public class Tree extends Element {
         parser = p;
     }
 
-    protected void parse(Lexer lexer, List<ASTree> res)
-            throws ParseException {
+    @Override
+    protected void parse(Lexer lexer, List<ASTree> res) throws ParseException {
         res.add(parser.parse(lexer));
     }
 
+    @Override
     protected boolean match(Lexer lexer) throws ParseException {
         return parser.match(lexer);
     }

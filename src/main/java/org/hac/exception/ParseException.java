@@ -14,10 +14,11 @@ public class ParseException extends Exception {
     }
 
     private static String location(Token t) {
-        if (t == Token.EOF)
+        if (t == Token.EOF) {
             return "the last line";
-        else
+        } else {
             return "\"" + t.getText() + "\" at line " + t.getLineNumber();
+        }
     }
 
     public ParseException(IOException e) {

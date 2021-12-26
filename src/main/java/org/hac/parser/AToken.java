@@ -17,8 +17,8 @@ public abstract class AToken extends Element {
         factory = Factory.get(type, Token.class);
     }
 
-    protected void parse(Lexer lexer, List<ASTree> res)
-            throws ParseException {
+    @Override
+    protected void parse(Lexer lexer, List<ASTree> res) throws ParseException {
         Token t = lexer.read();
         if (test(t)) {
             ASTree leaf = factory.make(t);
@@ -27,6 +27,7 @@ public abstract class AToken extends Element {
             throw new ParseException(t);
     }
 
+    @Override
     protected boolean match(Lexer lexer) throws ParseException {
         return test(lexer.peek(0));
     }

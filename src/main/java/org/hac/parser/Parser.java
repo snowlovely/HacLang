@@ -23,17 +23,17 @@ public class Parser {
     }
 
     public ASTree parse(Lexer lexer) throws ParseException {
-        ArrayList<ASTree> results = new ArrayList<ASTree>();
-        for (Element e : elements)
+        ArrayList<ASTree> results = new ArrayList<>();
+        for (Element e : elements) {
             e.parse(lexer, results);
-
+        }
         return factory.make(results);
     }
 
     protected boolean match(Lexer lexer) throws ParseException {
-        if (elements.size() == 0)
+        if (elements.size() == 0) {
             return true;
-        else {
+        } else {
             Element e = elements.get(0);
             return e.match(lexer);
         }
@@ -48,12 +48,12 @@ public class Parser {
     }
 
     public Parser reset() {
-        elements = new ArrayList<Element>();
+        elements = new ArrayList<>();
         return this;
     }
 
     public Parser reset(Class<? extends ASTree> clazz) {
-        elements = new ArrayList<Element>();
+        elements = new ArrayList<>();
         factory = Factory.getForASTList(clazz);
         return this;
     }
@@ -71,8 +71,7 @@ public class Parser {
         return identifier(null, reserved);
     }
 
-    public Parser identifier(Class<? extends ASTLeaf> clazz,
-                             HashSet<String> reserved) {
+    public Parser identifier(Class<? extends ASTLeaf> clazz, HashSet<String> reserved) {
         elements.add(new IdToken(clazz, reserved));
         return this;
     }
@@ -128,17 +127,16 @@ public class Parser {
         return this;
     }
 
-    public Parser expression(Class<? extends ASTree> clazz, Parser subExpr,
-                             Operators operators) {
+    public Parser expression(Class<? extends ASTree> clazz, Parser subExpr, Operators operators) {
         elements.add(new Expr(clazz, subExpr, operators));
         return this;
     }
 
     public Parser insertChoice(Parser p) {
         Element e = elements.get(0);
-        if (e instanceof OrTree)
+        if (e instanceof OrTree) {
             ((OrTree) e).insert(p);
-        else {
+        } else {
             Parser otherwise = new Parser(this);
             reset(null);
             or(p, otherwise);

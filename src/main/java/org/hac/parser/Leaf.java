@@ -15,33 +15,38 @@ public class Leaf extends Element {
         tokens = pat;
     }
 
-    protected void parse(Lexer lexer, List<ASTree> res)
-            throws ParseException {
+    @Override
+    protected void parse(Lexer lexer, List<ASTree> res) throws ParseException {
         Token t = lexer.read();
-        if (t.isIdentifier())
-            for (String token : tokens)
+        if (t.isIdentifier()) {
+            for (String token : tokens) {
                 if (token.equals(t.getText())) {
                     find(res, t);
                     return;
                 }
-
-        if (tokens.length > 0)
+            }
+        }
+        if (tokens.length > 0) {
             throw new ParseException(tokens[0] + " expected.", t);
-        else
+        } else {
             throw new ParseException(t);
+        }
     }
 
     protected void find(List<ASTree> res, Token t) {
         res.add(new ASTLeaf(t));
     }
 
+    @Override
     protected boolean match(Lexer lexer) throws ParseException {
         Token t = lexer.peek(0);
-        if (t.isIdentifier())
-            for (String token : tokens)
-                if (token.equals(t.getText()))
+        if (t.isIdentifier()) {
+            for (String token : tokens) {
+                if (token.equals(t.getText())) {
                     return true;
-
+                }
+            }
+        }
         return false;
     }
 }

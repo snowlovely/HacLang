@@ -22,10 +22,12 @@ public class ClassStmt extends ASTList {
         return (ClassBody) child(numChildren() - 1);
     }
 
+    @Override
     public String toString() {
         String parent = superClass();
-        if (parent == null)
+        if (parent == null) {
             parent = "*";
+        }
         return "(class " + name() + " " + parent + " " + body() + ")";
     }
 }

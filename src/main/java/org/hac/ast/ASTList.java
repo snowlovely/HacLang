@@ -10,18 +10,22 @@ public class ASTList extends ASTree {
         children = list;
     }
 
+    @Override
     public ASTree child(int i) {
         return children.get(i);
     }
 
+    @Override
     public int numChildren() {
         return children.size();
     }
 
+    @Override
     public Iterator<ASTree> children() {
         return children.iterator();
     }
 
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append('(');
@@ -34,11 +38,13 @@ public class ASTList extends ASTree {
         return builder.append(')').toString();
     }
 
+    @Override
     public String location() {
         for (ASTree t : children) {
             String s = t.location();
-            if (s != null)
+            if (s != null) {
                 return s;
+            }
         }
         return null;
     }

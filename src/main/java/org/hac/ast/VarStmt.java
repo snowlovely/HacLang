@@ -19,6 +19,7 @@ public class VarStmt extends ASTList {
         return child(2);
     }
 
+    @Override
     public String toString() {
         return "(var " + name() + " " + type() + " " + initializer() + ")";
     }

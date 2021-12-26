@@ -8,6 +8,7 @@ public class StrToken extends AToken {
         super(type);
     }
 
+    @Override
     protected boolean test(Token t) {
         return t.isString();
     }

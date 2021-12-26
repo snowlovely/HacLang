@@ -10,6 +10,7 @@ public class Skip extends Leaf {
         super(t);
     }
 
+    @Override
     protected void find(List<ASTree> res, Token t) {
     }
 }

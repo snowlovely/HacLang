@@ -10,12 +10,14 @@ public class TypeTag extends ASTList {
     }
 
     public String type() {
-        if (numChildren() > 0)
+        if (numChildren() > 0) {
             return ((ASTLeaf) child(0)).token().getText();
-        else
+        } else {
             return UNDEF;
+        }
     }
 
+    @Override
     public String toString() {
         return ":" + type();
     }

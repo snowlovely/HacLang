@@ -16,14 +16,15 @@ public class Repeat extends Element {
         onlyOnce = once;
     }
 
-    protected void parse(Lexer lexer, List<ASTree> res)
-            throws ParseException {
+    protected void parse(Lexer lexer, List<ASTree> res) throws ParseException {
         while (parser.match(lexer)) {
             ASTree t = parser.parse(lexer);
-            if (t.getClass() != ASTList.class || t.numChildren() > 0)
+            if (t.getClass() != ASTList.class || t.numChildren() > 0) {
                 res.add(t);
-            if (onlyOnce)
+            }
+            if (onlyOnce) {
                 break;
+            }
         }
     }
 

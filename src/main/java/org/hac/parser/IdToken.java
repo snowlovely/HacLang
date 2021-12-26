@@ -10,9 +10,10 @@ public class IdToken extends AToken {
 
     protected IdToken(Class<? extends ASTLeaf> type, HashSet<String> r) {
         super(type);
-        reserved = r != null ? r : new HashSet<String>();
+        reserved = r != null ? r : new HashSet<>();
     }
 
+    @Override
     protected boolean test(Token t) {
         return t.isIdentifier() && !reserved.contains(t.getText());
     }

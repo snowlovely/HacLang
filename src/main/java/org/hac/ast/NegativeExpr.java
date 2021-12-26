@@ -11,6 +11,7 @@ public class NegativeExpr extends ASTList {
         return child(0);
     }
 
+    @Override
     public String toString() {
         return "-" + operand();
     }
