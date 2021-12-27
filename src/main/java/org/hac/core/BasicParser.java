@@ -33,7 +33,7 @@ public class BasicParser {
             .sep("}");
     // simple: expr
     Parser simple = Parser.rule(PrimaryExpr.class).ast(expr);
-    // statement : 'if' expr [ 'else' block ] | 'while' expr block | simple
+    // statement : 'if' expr block [ 'else' block ] | 'while' expr block | simple
     Parser statement = statement0.or(
             Parser.rule(IfStmt.class).sep("if").ast(expr).ast(block)
                     .option(Parser.rule().sep("else").ast(block)),
@@ -41,7 +41,7 @@ public class BasicParser {
             simple);
     // program : [statement] ( ';' | EOL )
     Parser program = Parser.rule().or(statement, Parser.rule(NullStmt.class))
-            .sep(";", Token.EOL , "");
+            .sep(";", Token.EOL);
 
     public BasicParser() {
         reserved.add(";");
