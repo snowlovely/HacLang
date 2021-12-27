@@ -39,7 +39,8 @@ public class BasicParser {
                     .option(Parser.rule().sep("else").ast(block)),
             Parser.rule(WhileStmt.class).sep("while").ast(expr).ast(block),
             simple);
-    // program : [statement] ( ';' | EOL )
+    // program : [ statement ] ( ';' | EOL )
+    // program : ( statement | null ) ( ';' | EOL )
     Parser program = Parser.rule().or(statement, Parser.rule(NullStmt.class))
             .sep(";", Token.EOL);
 
