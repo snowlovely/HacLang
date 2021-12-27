@@ -48,10 +48,6 @@ public class Core {
         try {
             FileReader reader = new FileReader(path.toFile());
             Lexer lexer = new Lexer(reader);
-            Lexer lexer1 = lexer;
-//            for (Token t; (t = lexer.read()) != Token.EOF; ) {
-//                System.out.println(t.getLineNumber() + " -> " + t.getClass().getName() + " -> " + t.getText());
-//            }
             BasicParser bp = new BasicParser();
             while (lexer.peek(0) != Token.EOF) {
                 ASTree ast = bp.parse(lexer);

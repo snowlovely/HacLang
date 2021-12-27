@@ -16,6 +16,7 @@ public class Repeat extends Element {
         onlyOnce = once;
     }
 
+    @Override
     protected void parse(Lexer lexer, List<ASTree> res) throws ParseException {
         while (parser.match(lexer)) {
             ASTree t = parser.parse(lexer);
@@ -28,6 +29,7 @@ public class Repeat extends Element {
         }
     }
 
+    @Override
     protected boolean match(Lexer lexer) throws ParseException {
         return parser.match(lexer);
     }
