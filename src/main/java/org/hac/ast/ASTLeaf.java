@@ -1,5 +1,7 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+import org.hac.exception.HacException;
 import org.hac.token.Token;
 
 import java.util.ArrayList;
@@ -36,6 +38,11 @@ public class ASTLeaf extends ASTree {
     @Override
     public String location() {
         return "at line " + token.getLineNumber();
+    }
+
+    @Override
+    public Object eval(Environment env) {
+        throw new HacException("cannot eval: " + toString(), this);
     }
 
     public Token token() {

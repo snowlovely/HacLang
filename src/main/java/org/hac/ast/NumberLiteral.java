@@ -1,5 +1,6 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
 import org.hac.token.Token;
 
 public class NumberLiteral extends ASTLeaf {
@@ -9,5 +10,10 @@ public class NumberLiteral extends ASTLeaf {
 
     public int value() {
         return token().getNumber();
+    }
+
+    @Override
+    public Object eval(Environment env) {
+        return this.value();
     }
 }

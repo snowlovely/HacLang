@@ -5,6 +5,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.hac.Command;
 import org.hac.ast.ASTree;
+import org.hac.ast.NullStmt;
 import org.hac.lexer.Lexer;
 import org.hac.token.Token;
 import org.hac.util.StringUtil;
@@ -49,9 +50,13 @@ public class Core {
             FileReader reader = new FileReader(path.toFile());
             Lexer lexer = new Lexer(reader);
             BasicParser bp = new BasicParser();
+            BasicEnv env = new BasicEnv();
             while (lexer.peek(0) != Token.EOF) {
-                ASTree ast = bp.parse(lexer);
-                System.out.println("=> " + ast.toString());
+                ASTree t = bp.parse(lexer);
+                if (!(t instanceof NullStmt)) {
+                    Object r = t.eval(env);
+                    System.out.println("=> " + r);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

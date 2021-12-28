@@ -1,5 +1,8 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+import org.hac.exception.HacException;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,5 +50,10 @@ public class ASTList extends ASTree {
             }
         }
         return null;
+    }
+
+    @Override
+    public Object eval(Environment env) {
+        throw new HacException("cannot eval: " + toString(), this);
     }
 }

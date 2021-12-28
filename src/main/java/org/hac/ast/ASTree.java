@@ -1,5 +1,7 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+
 import java.util.Iterator;
 
 public abstract class ASTree implements Iterable<ASTree> {
@@ -15,4 +17,6 @@ public abstract class ASTree implements Iterable<ASTree> {
     public Iterator<ASTree> iterator() {
         return children();
     }
+
+    public abstract Object eval(Environment env);
 }

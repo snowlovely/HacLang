@@ -1,5 +1,8 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+import org.hac.exception.HacException;
+
 import java.util.List;
 
 public class NegativeExpr extends ASTList {
@@ -14,5 +17,15 @@ public class NegativeExpr extends ASTList {
     @Override
     public String toString() {
         return "-" + operand();
+    }
+
+    @Override
+    public Object eval(Environment env) {
+        Object v = operand().eval(env);
+        if (v instanceof Integer) {
+            return -(Integer) v;
+        } else {
+            throw new HacException("bad type for -", this);
+        }
     }
 }

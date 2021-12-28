@@ -1,6 +1,10 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+
 import java.util.List;
+
+import static org.hac.core.Environment.FALSE;
 
 public class WhileStmt extends ASTList {
     public WhileStmt(List<ASTree> c) {
@@ -18,5 +22,17 @@ public class WhileStmt extends ASTList {
     @Override
     public String toString() {
         return "(while " + condition() + " " + body() + ")";
+    }
+
+    @Override
+    public Object eval(Environment env) {
+        Object result = 0;
+        for (; ; ) {
+            Object c = condition().eval(env);
+            if (c instanceof Integer && (Integer) c == FALSE)
+                return result;
+            else
+                result = body().eval(env);
+        }
     }
 }
