@@ -1,5 +1,8 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+import org.hac.core.Function;
+
 import java.util.List;
 
 public class Fun extends ASTList {
@@ -18,5 +21,10 @@ public class Fun extends ASTList {
     @Override
     public String toString() {
         return "(fun " + parameters() + " " + body() + ")";
+    }
+
+    @Override
+    public Object eval(Environment env) {
+        return new Function(parameters(), body(), env);
     }
 }

@@ -13,7 +13,7 @@ public class BasicParser {
     HashSet<String> reserved = new HashSet<>();
     Operators operators = new Operators();
     Parser expr0 = Parser.rule();
-    // primary : '(' expr ')' | number | identifier | string
+    // primary : "(" expr ")" | number | identifier | string
     Parser primary = Parser.rule(PrimaryExpr.class)
             .or(Parser.rule().sep("(").ast(expr0).sep(")"),
                     Parser.rule().number(NumberLiteral.class),
@@ -26,21 +26,21 @@ public class BasicParser {
     Parser expr = expr0.expression(BinaryExpr.class, factor, operators);
 
     Parser statement0 = Parser.rule();
-    // block: '{' [ statement ] { ( ';' | EOL ) [statement] } '}'
+    // block: "{" [ statement ] { ( ";" | EOL ) [statement] } "}"
     Parser block = Parser.rule(BlockStmt.class)
             .sep("{").option(statement0)
             .repeat(Parser.rule().sep(";", Token.EOL).option(statement0))
             .sep("}");
     // simple: expr
     Parser simple = Parser.rule(PrimaryExpr.class).ast(expr);
-    // statement : 'if' expr block [ 'else' block ] | 'while' expr block | simple
+    // statement : "if" expr block [ "else" block ] | "while" expr block | simple
     Parser statement = statement0.or(
             Parser.rule(IfStmt.class).sep("if").ast(expr).ast(block)
                     .option(Parser.rule().sep("else").ast(block)),
             Parser.rule(WhileStmt.class).sep("while").ast(expr).ast(block),
             simple);
-    // program : [ statement ] ( ';' | EOL )
-    // program : ( statement | null ) ( ';' | EOL )
+    // program : [ statement ] ( ";" | EOL )
+    // program : ( statement | null ) ( ";" | EOL )
     Parser program = Parser.rule().or(statement, Parser.rule(NullStmt.class))
             .sep(";", Token.EOL);
 

@@ -1,5 +1,8 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+import org.hac.core.Function;
+
 import java.util.List;
 
 public class DefStmt extends ASTList {
@@ -22,5 +25,11 @@ public class DefStmt extends ASTList {
     @Override
     public String toString() {
         return "(def " + name() + " " + parameters() + " " + body() + ")";
+    }
+
+    @Override
+    public Object eval(Environment env) {
+        env.putNew(name(), new Function(parameters(), body(), env));
+        return name();
     }
 }

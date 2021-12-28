@@ -84,7 +84,7 @@ public class Lexer {
     }
 
     private static boolean isBracket(int c) {
-        return c == '{' || c == '}';
+        return c == '{' || c == '}' || c == '(' || c == ')';
     }
 
     private static boolean isSem(int c) {

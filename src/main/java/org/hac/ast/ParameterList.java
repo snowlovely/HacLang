@@ -1,5 +1,7 @@
 package org.hac.ast;
 
+import org.hac.core.Environment;
+
 import java.util.List;
 
 public class ParameterList extends ASTList {
@@ -13,5 +15,9 @@ public class ParameterList extends ASTList {
 
     public int size() {
         return numChildren();
+    }
+
+    public void eval(Environment env, int index, Object value) {
+        env.putNew(name(index), value);
     }
 }
