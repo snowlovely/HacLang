@@ -48,24 +48,13 @@ public class Core {
         }
         try {
             FileReader reader = new FileReader(path.toFile());
-//            Lexer lexer = new Lexer(reader);
-//            BasicParser bp = new BasicParser();
-//            BasicEnv env = new BasicEnv();
-//            while (lexer.peek(0) != Token.EOF) {
-//                ASTree t = bp.parse(lexer);
-//                if (!(t instanceof NullStmt)) {
-//                    System.out.println(t);
-//                    Object r = t.eval(env);
-//                    System.out.println("=> " + r);
-//                }
-//            }
-            FuncParser fp = new FuncParser();
-            Environment env = new Natives().environment(new NestedEnv());
+            CoreParser fp = new CoreParser();
+            Environment env = new Natives().environment(new CoreEnv());
             Lexer lexer = new Lexer(reader);
             while (lexer.peek(0) != Token.EOF) {
                 ASTree t = fp.parse(lexer);
                 if (!(t instanceof NullStmt)) {
-                    Object r = t.eval(env);
+                    t.eval(env);
                 }
             }
         } catch (Exception e) {

@@ -2,15 +2,15 @@ package org.hac.core;
 
 import java.util.HashMap;
 
-public class NestedEnv implements Environment {
+public class CoreEnv implements Environment {
     protected HashMap<String, Object> values;
     protected Environment outer;
 
-    public NestedEnv() {
+    public CoreEnv() {
         this(null);
     }
 
-    public NestedEnv(Environment e) {
+    public CoreEnv(Environment e) {
         values = new HashMap<>();
         outer = e;
     }

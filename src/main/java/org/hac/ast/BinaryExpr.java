@@ -38,10 +38,25 @@ public class BinaryExpr extends ASTList {
         }
     }
 
-    private Object computeAssign(Environment env, Object rvalue) {
-        ASTree l = left();
-        if (l instanceof Name) {
-            env.put(((Name) l).name(), rvalue);
+    protected Object computeAssign(Environment env, Object rvalue) {
+        ASTree le = left();
+        if (le instanceof PrimaryExpr) {
+            if (((PrimaryExpr) le).hasPostfix(0) &&
+                    ((PrimaryExpr) le).postfix(0) instanceof ArrayRef) {
+                Object a = ((PrimaryExpr) le).evalSubExpr(env, 1);
+                if (a instanceof Object[]) {
+                    ArrayRef ref = (ArrayRef) ((PrimaryExpr) le).postfix(0);
+                    Object index = ref.index().eval(env);
+                    if (index instanceof Integer) {
+                        ((Object[]) a)[(Integer) index] = rvalue;
+                        return rvalue;
+                    }
+                }
+                throw new HacException("bad array access", this);
+            }
+        }
+        if (le instanceof Name) {
+            env.put(((Name) le).name(), rvalue);
             return rvalue;
         } else {
             throw new HacException("bad assignment", this);

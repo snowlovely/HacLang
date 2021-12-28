@@ -84,7 +84,13 @@ public class Lexer {
     }
 
     private static boolean isBracket(int c) {
-        return c == '{' || c == '}' || c == '(' || c == ')';
+        return c == '{' || c == '}' ||
+                c == '(' || c == ')' ||
+                c == '[' || c == ']';
+    }
+
+    private static boolean isComma(int c) {
+        return c == ',';
     }
 
     private static boolean isSem(int c) {
@@ -176,6 +182,8 @@ public class Lexer {
                 return new IdToken(LINE_NUMBER, String.valueOf((char) c));
             } else if (isSem(c)) {
                 return new IdToken(LINE_NUMBER, ";");
+            } else if (isComma(c)) {
+                return new IdToken(LINE_NUMBER, ",");
             } else {
                 throw new ParseException("error token");
             }
