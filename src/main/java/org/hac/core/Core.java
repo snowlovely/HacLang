@@ -60,13 +60,12 @@ public class Core {
 //                }
 //            }
             FuncParser fp = new FuncParser();
-            NestedEnv env = new NestedEnv();
+            Environment env = new Natives().environment(new NestedEnv());
             Lexer lexer = new Lexer(reader);
             while (lexer.peek(0) != Token.EOF) {
                 ASTree t = fp.parse(lexer);
                 if (!(t instanceof NullStmt)) {
                     Object r = t.eval(env);
-                    System.out.println("=> " + r);
                 }
             }
         } catch (Exception e) {
