@@ -27,7 +27,6 @@ public class ArrayRef extends Postfix {
                 return ((Object[]) value)[(Integer) index];
             }
         }
-
         throw new HacException("bad array access", this);
     }
 }

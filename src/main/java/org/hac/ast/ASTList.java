@@ -1,6 +1,7 @@
 package org.hac.ast;
 
 import org.hac.core.Environment;
+import org.hac.core.Symbols;
 import org.hac.exception.HacException;
 
 import java.util.Iterator;
@@ -55,5 +56,12 @@ public class ASTList extends ASTree {
     @Override
     public Object eval(Environment env) {
         throw new HacException("cannot eval: " + toString(), this);
+    }
+
+    @Override
+    public void lookup(Symbols sym) {
+        for (ASTree t : this.children) {
+            t.lookup(sym);
+        }
     }
 }

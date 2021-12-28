@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
+/**
+ * Lexical Analysis
+ * Coded By 4ra1n
+ */
 public class Lexer {
     private final Reader reader;
     private static final int EMPTY = -1;

@@ -1,25 +1,55 @@
 package org.hac.ast;
 
 import org.hac.core.Environment;
+import org.hac.core.Location;
+import org.hac.core.Symbols;
 import org.hac.exception.HacException;
 import org.hac.token.Token;
 
 public class Name extends ASTLeaf {
-    public Name(Token t) {
-        super(t);
-    }
+    private static final int UNKNOWN = -1;
+    private int nest;
+    private int index;
 
     public String name() {
         return token().getText();
     }
 
+    public Name(Token t) {
+        super(t);
+        index = UNKNOWN;
+    }
+
     @Override
-    public Object eval(Environment env) {
-        Object value = env.get(name());
-        if (value == null) {
+    public void lookup(Symbols sym) {
+        Location loc = sym.get(name());
+        if (loc == null) {
             throw new HacException("undefined name: " + name(), this);
         } else {
-            return value;
+            nest = loc.nest;
+            index = loc.index;
+        }
+    }
+
+    public void lookupForAssign(Symbols sym) {
+        Location loc = sym.put(name());
+        nest = loc.nest;
+        index = loc.index;
+    }
+
+    public Object eval(Environment env) {
+        if (index == UNKNOWN) {
+            return env.get(name());
+        } else {
+            return env.get(nest, index);
+        }
+    }
+
+    public void evalForAssign(Environment env, Object value) {
+        if (index == UNKNOWN) {
+            env.put(name(), value);
+        } else {
+            env.put(nest, index, value);
         }
     }
 }

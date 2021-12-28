@@ -1,6 +1,7 @@
 package org.hac.ast;
 
 import org.hac.core.Environment;
+import org.hac.core.Symbols;
 import org.hac.exception.HacException;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class BinaryExpr extends ASTList {
         }
     }
 
-    protected Object computeAssign(Environment env, Object rvalue) {
+    protected Object computeAssign0(Environment env, Object rvalue) {
         ASTree le = left();
         if (le instanceof PrimaryExpr) {
             if (((PrimaryExpr) le).hasPostfix(0) &&
@@ -106,6 +107,30 @@ public class BinaryExpr extends ASTList {
                 return a <= b ? TRUE : FALSE;
             default:
                 throw new HacException("bad operator", this);
+        }
+    }
+
+    @Override
+    public void lookup(Symbols sym) {
+        ASTree left = left();
+        if ("=".equals(operator())) {
+            if (left instanceof Name) {
+                ((Name) left).lookupForAssign(sym);
+                right().lookup(sym);
+                return;
+            }
+        }
+        left.lookup(sym);
+        right().lookup(sym);
+    }
+
+    protected Object computeAssign(Environment env, Object rvalue) {
+        ASTree l = left();
+        if (l instanceof Name) {
+            ((Name) l).evalForAssign(env, rvalue);
+            return rvalue;
+        } else {
+            return computeAssign0(env, rvalue);
         }
     }
 }

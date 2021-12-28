@@ -11,7 +11,13 @@ import java.util.HashSet;
 
 import static org.hac.parser.Parser.rule;
 
+/**
+ * SYNTAX ANALYSIS USING BNF
+ */
 public class CoreParser {
+    /**
+     * START BASIC RULE
+     */
     HashSet<String> reserved = new HashSet<>();
     Operators operators = new Operators();
     Parser expr0 = Parser.rule();
@@ -26,7 +32,6 @@ public class CoreParser {
             .or(Parser.rule(NegativeExpr.class).sep("-").ast(primary), primary);
     // expr : factor { operator factor }
     Parser expr = expr0.expression(BinaryExpr.class, factor, operators);
-
     Parser statement0 = Parser.rule();
     // block: "{" [ statement ] { ( ";" | EOL ) [statement] } "}"
     Parser block = Parser.rule(BlockStmt.class)
@@ -41,10 +46,13 @@ public class CoreParser {
                     .option(Parser.rule().sep("else").ast(block)),
             Parser.rule(WhileStmt.class).sep("while").ast(expr).ast(block),
             simple);
-    // program : [ statement ] ( ";" | EOL )
     // program : ( statement | null ) ( ";" | EOL )
+    // ==> program : [ statement ] ( ";" | EOL )
     Parser program = Parser.rule().or(statement, Parser.rule(NullStmt.class))
             .sep(";", Token.EOL);
+    /**
+     * START FUNCTION RULE
+     */
     Parser param = rule().identifier(reserved);
     // params : param { ","  param }
     Parser params = rule(ParameterList.class)
@@ -59,15 +67,46 @@ public class CoreParser {
             .ast(expr).repeat(rule().sep(",").ast(expr));
     // postfix : "(" [ args ] ")"
     Parser postfix = rule().sep("(").maybe(args).sep(")");
-    //
+    /**
+     * START ARRAY RULE
+     */
+    // element : expr { "," expr }
     Parser elements = rule(ArrayLiteral.class)
             .ast(expr).repeat(rule().sep(",").ast(expr));
 
+    /**
+     * BUILD RULE
+     */
     public CoreParser() {
-        reserved.add(";");
-        reserved.add("}");
-        reserved.add(Token.EOL);
+        addReserved();
+        addOperators();
+        arrayRule();
+        functionRule();
+    }
 
+    private void arrayRule() {
+        // primary : "[" [element] "]"
+        //           | "(" expr ")" | number | identifier | string
+        primary.insertChoice(rule().sep("[").maybe(elements).sep("]"));
+        // postfix : "(" [ args ] ")" | "[" expr "]"
+        postfix.insertChoice(rule(ArrayRef.class).sep("[").ast(expr).sep("]"));
+    }
+
+    private void functionRule() {
+        // primary : ( "[" [element] "]" | "(" expr ")"
+        //           | number | identifier | string ) { postfix }
+        primary.repeat(postfix);
+        // simple : expr [args]
+        simple.option(args);
+        // program : [ def | statement ] ( ";" | EOL )
+        program.insertChoice(def);
+        // primary : ( "[" [element] "]" | "(" expr ")"
+        //           | number | identifier | string | "fun" ) { postfix }
+        primary.insertChoice(rule(Fun.class)
+                .sep("fun").ast(paramList).ast(block));
+    }
+
+    private void addOperators() {
         operators.add("=", 1, Operators.RIGHT);
         operators.add("==", 2, Operators.LEFT);
         operators.add(">", 2, Operators.LEFT);
@@ -79,20 +118,14 @@ public class CoreParser {
         operators.add("*", 4, Operators.LEFT);
         operators.add("/", 4, Operators.LEFT);
         operators.add("%", 4, Operators.LEFT);
+    }
 
+    private void addReserved() {
+        reserved.add(";");
+        reserved.add("}");
         reserved.add("]");
-        primary.insertChoice(rule().sep("[").maybe(elements).sep("]"));
-        postfix.insertChoice(rule(ArrayRef.class).sep("[").ast(expr).sep("]"));
         reserved.add(")");
-        // primary : ( "(" expr ")" | number | identifier | string ) { postfix }
-        primary.repeat(postfix);
-        // simple : expr [args]
-        simple.option(args);
-        // program : [ def | statement ] ( ";" | EOL )
-        program.insertChoice(def);
-        // primary : ( "(" expr ")" | number | identifier | string | "fun" ) { postfix }
-        primary.insertChoice(rule(Fun.class)
-                .sep("fun").ast(paramList).ast(block));
+        reserved.add(Token.EOL);
     }
 
     public ASTree parse(Lexer lexer) throws ParseException {

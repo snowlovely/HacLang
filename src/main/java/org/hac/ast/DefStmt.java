@@ -2,10 +2,15 @@ package org.hac.ast;
 
 import org.hac.core.Environment;
 import org.hac.core.Function;
+import org.hac.core.OptFunction;
+import org.hac.core.Symbols;
 
 import java.util.List;
 
 public class DefStmt extends ASTList {
+    private int size;
+    private int index;
+
     public DefStmt(List<ASTree> c) {
         super(c);
     }
@@ -28,8 +33,14 @@ public class DefStmt extends ASTList {
     }
 
     @Override
+    public void lookup(Symbols sym) {
+        index = sym.putNew(name());
+        size = Fun.lookup(sym, parameters(), body());
+    }
+
+    @Override
     public Object eval(Environment env) {
-        env.putNew(name(), new Function(parameters(), body(), env));
+        env.put(0, index, new OptFunction(parameters(), body(), env, size));
         return name();
     }
 }

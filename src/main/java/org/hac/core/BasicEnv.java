@@ -2,15 +2,15 @@ package org.hac.core;
 
 import java.util.HashMap;
 
-public class CoreEnv implements Environment {
+public class BasicEnv implements Environment {
     protected HashMap<String, Object> values;
     protected Environment outer;
 
-    public CoreEnv() {
+    public BasicEnv() {
         this(null);
     }
 
-    public CoreEnv(Environment e) {
+    public BasicEnv(Environment e) {
         values = new HashMap<>();
         outer = e;
     }
@@ -18,6 +18,21 @@ public class CoreEnv implements Environment {
     @Override
     public void setOuter(Environment e) {
         outer = e;
+    }
+
+    @Override
+    public Symbols symbols() {
+        return null;
+    }
+
+    @Override
+    public void put(int nest, int index, Object value) {
+
+    }
+
+    @Override
+    public Object get(int nest, int index) {
+        return null;
     }
 
     @Override
