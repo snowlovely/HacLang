@@ -74,7 +74,8 @@ public class BinaryExpr extends ASTList {
             if (left == null) {
                 return right == null ? TRUE : FALSE;
             } else {
-                return left.equals(right) ? TRUE : FALSE;
+                return String.valueOf(left).equals(
+                        String.valueOf(right)) ? TRUE : FALSE;
             }
         } else {
             throw new HacException("bad type", this);

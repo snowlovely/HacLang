@@ -40,11 +40,14 @@ public class CoreParser {
             .sep("}");
     // simple: expr
     Parser simple = Parser.rule(PrimaryExpr.class).ast(expr);
-    // statement : "if" expr block [ "else" block ] | "while" expr block | simple
+    // statement : "if" expr block [ "else" block ]
+    //             | "while" expr block | simple
+    //             | "return" factor
     Parser statement = statement0.or(
             Parser.rule(IfStmt.class).sep("if").ast(expr).ast(block)
                     .option(Parser.rule().sep("else").ast(block)),
             Parser.rule(WhileStmt.class).sep("while").ast(expr).ast(block),
+            Parser.rule(ReturnStmt.class).sep("return").ast(factor),
             simple);
     // program : ( statement | null ) ( ";" | EOL )
     // ==> program : [ statement ] ( ";" | EOL )
@@ -57,7 +60,7 @@ public class CoreParser {
     // params : param { ","  param }
     Parser params = rule(ParameterList.class)
             .ast(param).repeat(rule().sep(",").ast(param));
-    // param_list : param "(" [ params ] ")"
+    // param_list : params "(" [ params ] ")"
     Parser paramList = rule().sep("(").maybe(params).sep(")");
     // def : "def" identifier param_list block
     Parser def = rule(DefStmt.class)

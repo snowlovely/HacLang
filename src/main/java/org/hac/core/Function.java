@@ -6,6 +6,7 @@ import org.hac.ast.ParameterList;
 public class Function {
     protected ParameterList parameters;
     protected BlockStmt body;
+    protected Object return0;
     protected Environment env;
 
     public Function(ParameterList parameters, BlockStmt body, Environment env) {
@@ -24,6 +25,14 @@ public class Function {
 
     public Environment makeEnv() {
         return new BasicEnv(env);
+    }
+
+    public void setReturn0(Object return0) {
+        this.return0 = return0;
+    }
+
+    public Object getReturn0() {
+        return return0;
     }
 
     @Override
