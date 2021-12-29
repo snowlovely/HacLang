@@ -15,4 +15,5 @@ def add(a,b){
 }
 data = readFile("1.txt");
 print(data);
-data = doGet();
+data = doGet("http://www.4399.com",["User-Agent: test"]);
+printArray(data[1])

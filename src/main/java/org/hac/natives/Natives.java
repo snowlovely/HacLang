@@ -14,6 +14,7 @@ public class Natives {
 
     protected void appendNatives(Environment env) {
         append(env, "print", Print.class, "print", Object.class);
+        append(env, "printArray", Print.class, "printArray", Object[].class);
         append(env, "length", Util.class, "length", String.class);
         append(env, "toInt", Convert.class, "toInt", Object.class);
         append(env, "currentTime", Time.class, "currentTime");
