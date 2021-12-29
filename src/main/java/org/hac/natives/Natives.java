@@ -13,10 +13,13 @@ public class Natives {
     }
 
     protected void appendNatives(Environment env) {
-        append(env, "print", Natives.class, "print", Object.class);
-        append(env, "length", Natives.class, "length", String.class);
-        append(env, "toInt", Natives.class, "toInt", Object.class);
-        append(env, "currentTime", Natives.class, "currentTime");
+        append(env, "print", Print.class, "print", Object.class);
+        append(env, "length", Util.class, "length", String.class);
+        append(env, "toInt", Convert.class, "toInt", Object.class);
+        append(env, "currentTime", Time.class, "currentTime");
+        append(env, "formatTime", Time.class, "formatTime");
+        append(env, "readFile", File.class, "readFile", String.class);
+        append(env, "writeFile", File.class, "writeFile", String.class, String.class);
     }
 
     protected void append(Environment env, String name, Class<?> clazz,
@@ -28,32 +31,5 @@ public class Natives {
             throw new HacException("cannot find a native function: " + methodName);
         }
         env.put(name, new NativeFunction(methodName, m));
-    }
-
-    public static int print(Object obj) {
-        System.out.println(obj.toString());
-        return 0;
-    }
-
-    public static int length(String s) {
-        return s.length();
-    }
-
-    public static int toInt(Object value) {
-        if (value instanceof String) {
-            return Integer.parseInt((String) value);
-        }
-        else if (value instanceof Integer) {
-            return (Integer) value;
-        }
-        else {
-            throw new NumberFormatException(value.toString());
-        }
-    }
-
-    private static final long startTime = System.currentTimeMillis();
-
-    public static int currentTime() {
-        return (int) (System.currentTimeMillis() - startTime);
     }
 }

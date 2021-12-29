@@ -49,10 +49,13 @@ public class CoreParser {
             Parser.rule(WhileStmt.class).sep("while").ast(expr).ast(block),
             Parser.rule(ReturnStmt.class).sep("return").ast(factor),
             simple);
-    // program : ( statement | null ) ( ";" | EOL )
-    // ==> program : [ statement ] ( ";" | EOL )
-    Parser program = Parser.rule().or(statement, Parser.rule(NullStmt.class))
+    // include : "#include" identifier
+    Parser include = Parser.rule(IncludeStmt.class).sep("#include")
+            .string(StringLiteral.class);
+    // program : ( include | statement | null ) ( ";" | EOL )
+    Parser program = Parser.rule().or(include, statement, Parser.rule(NullStmt.class))
             .sep(";", Token.EOL);
+
     /**
      * START FUNCTION RULE
      */
@@ -70,6 +73,7 @@ public class CoreParser {
             .ast(expr).repeat(rule().sep(",").ast(expr));
     // postfix : "(" [ args ] ")"
     Parser postfix = rule().sep("(").maybe(args).sep(")");
+
     /**
      * START ARRAY RULE
      */
@@ -87,6 +91,9 @@ public class CoreParser {
         functionRule();
     }
 
+    /**
+     * BUILD ARRAY RULE
+     */
     private void arrayRule() {
         // primary : "[" [element] "]"
         //           | "(" expr ")" | number | identifier | string
@@ -95,6 +102,9 @@ public class CoreParser {
         postfix.insertChoice(rule(ArrayRef.class).sep("[").ast(expr).sep("]"));
     }
 
+    /**
+     * BUILD FUNCTION RULE
+     */
     private void functionRule() {
         // primary : ( "[" [element] "]" | "(" expr ")"
         //           | number | identifier | string ) { postfix }

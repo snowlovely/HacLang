@@ -1,3 +1,7 @@
+#include "core/ldap"
+#include "core/jndi"
+#include "payload"
+
 // test1
 // TEST
 def add(a,b){
@@ -12,3 +16,6 @@ def add(a,b){
     }
 }
 print(add(2,8));
+writeFile("1.txt","4ra1n");
+data=readFile("1.txt")
+print(data)

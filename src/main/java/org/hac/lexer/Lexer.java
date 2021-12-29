@@ -77,6 +77,13 @@ public class Lexer {
             }
             if (c < 0) {
                 return Token.EOF;
+            } else if (LexerUtil.isPound(c)) {
+                sb.append((char) c);
+                c = getChar();
+                while (LexerUtil.isLetter(c)) {
+                    sb.append((char) c);
+                    c = getChar();
+                }
             } else if (LexerUtil.isSlash(c)) {
                 c = getChar();
                 if (LexerUtil.isSlash(c)) {
@@ -168,7 +175,8 @@ public class Lexer {
                 ungetChar(c);
             }
             String temp = sb.toString();
-            if (LexerUtil.isLetter(temp.toCharArray()[0])) {
+            if (LexerUtil.isLetter(temp.toCharArray()[0]) ||
+                    LexerUtil.isPound(temp.toCharArray()[0])) {
                 return new IdToken(LINE_NUMBER, temp);
             } else if (LexerUtil.isDigit(temp.toCharArray()[0])) {
                 return new NumToken(LINE_NUMBER, Integer.parseInt(temp));

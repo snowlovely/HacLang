@@ -35,6 +35,10 @@ public class LexerUtil {
         return c == ',';
     }
 
+    public static boolean isPound(int c){
+        return c=='#';
+    }
+
     public static boolean isSem(int c) {
         return c == ';';
     }
