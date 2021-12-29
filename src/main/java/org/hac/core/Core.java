@@ -39,7 +39,7 @@ public class Core {
             logger.error("extension name is null");
             return;
         } else {
-            if (!extName.equalsIgnoreCase("hac")) {
+            if (!extName.equalsIgnoreCase("h")) {
                 logger.error("error extension name");
                 return;
             }
@@ -58,7 +58,7 @@ public class Core {
                 ASTree t = fp.parse(lexer);
                 if (!(t instanceof NullStmt)) {
                     t.lookup(env.symbols());
-                    Object r = t.eval(env);
+                    t.eval(env);
                 }
             }
         } catch (Exception e) {
