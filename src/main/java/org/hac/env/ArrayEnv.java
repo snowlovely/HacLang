@@ -1,4 +1,4 @@
-package org.hac.core;
+package org.hac.env;
 
 import org.hac.exception.HacException;
 

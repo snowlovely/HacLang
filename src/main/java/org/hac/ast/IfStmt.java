@@ -1,10 +1,10 @@
 package org.hac.ast;
 
-import org.hac.core.Environment;
+import org.hac.env.Environment;
 
 import java.util.List;
 
-import static org.hac.core.Environment.FALSE;
+import static org.hac.env.Environment.FALSE;
 
 public class IfStmt extends ASTList {
     public IfStmt(List<ASTree> c) {

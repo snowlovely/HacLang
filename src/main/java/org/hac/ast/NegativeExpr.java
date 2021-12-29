@@ -1,6 +1,6 @@
 package org.hac.ast;
 
-import org.hac.core.Environment;
+import org.hac.env.Environment;
 import org.hac.exception.HacException;
 
 import java.util.List;

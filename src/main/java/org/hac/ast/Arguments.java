@@ -1,8 +1,8 @@
 package org.hac.ast;
 
-import org.hac.core.Environment;
-import org.hac.core.Function;
-import org.hac.core.NativeFunction;
+import org.hac.env.Environment;
+import org.hac.function.Function;
+import org.hac.function.NativeFunction;
 import org.hac.exception.HacException;
 
 import java.util.List;

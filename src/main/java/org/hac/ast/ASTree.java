@@ -1,7 +1,7 @@
 package org.hac.ast;
 
-import org.hac.core.Environment;
-import org.hac.core.Symbols;
+import org.hac.env.Environment;
+import org.hac.env.Symbols;
 
 import java.util.Iterator;
 

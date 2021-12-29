@@ -1,8 +1,8 @@
 package org.hac.ast;
 
-import org.hac.core.Environment;
-import org.hac.core.Location;
-import org.hac.core.Symbols;
+import org.hac.env.Environment;
+import org.hac.env.Location;
+import org.hac.env.Symbols;
 import org.hac.exception.HacException;
 import org.hac.token.Token;
 

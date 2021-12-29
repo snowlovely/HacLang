@@ -1,7 +1,9 @@
-package org.hac.core;
+package org.hac.function;
 
 import org.hac.ast.BlockStmt;
 import org.hac.ast.ParameterList;
+import org.hac.env.ArrayEnv;
+import org.hac.env.Environment;
 
 public class OptFunction extends Function {
     protected int size;

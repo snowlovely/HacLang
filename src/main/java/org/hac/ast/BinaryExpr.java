@@ -1,13 +1,13 @@
 package org.hac.ast;
 
-import org.hac.core.Environment;
-import org.hac.core.Symbols;
+import org.hac.env.Environment;
+import org.hac.env.Symbols;
 import org.hac.exception.HacException;
 
 import java.util.List;
 
-import static org.hac.core.Environment.FALSE;
-import static org.hac.core.Environment.TRUE;
+import static org.hac.env.Environment.FALSE;
+import static org.hac.env.Environment.TRUE;
 
 public class BinaryExpr extends ASTList {
     public BinaryExpr(List<ASTree> c) {

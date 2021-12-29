@@ -1,7 +1,9 @@
-package org.hac.core;
+package org.hac.function;
 
 import org.hac.ast.BlockStmt;
 import org.hac.ast.ParameterList;
+import org.hac.env.BasicEnv;
+import org.hac.env.Environment;
 
 public class Function {
     protected ParameterList parameters;

@@ -1,6 +1,8 @@
-package org.hac.core;
+package org.hac.natives;
 
+import org.hac.env.Environment;
 import org.hac.exception.HacException;
+import org.hac.function.NativeFunction;
 
 import java.lang.reflect.Method;
 

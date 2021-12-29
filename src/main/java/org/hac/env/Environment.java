@@ -1,4 +1,4 @@
-package org.hac.core;
+package org.hac.env;
 
 public interface Environment {
     int TRUE = 1;

@@ -6,7 +6,10 @@ import org.apache.log4j.Logger;
 import org.hac.Command;
 import org.hac.ast.ASTree;
 import org.hac.ast.NullStmt;
+import org.hac.env.Environment;
+import org.hac.env.ResizableArrayEnv;
 import org.hac.lexer.Lexer;
+import org.hac.natives.Natives;
 import org.hac.token.Token;
 import org.hac.util.StringUtil;
 
