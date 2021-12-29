@@ -16,6 +16,10 @@ public class NativeFunction {
         numParams = m.getParameterTypes().length;
     }
 
+    public String getName(){
+        return this.name;
+    }
+
     @Override
     public String toString() {
         return "<native:" + hashCode() + ">";

@@ -1,6 +1,4 @@
-#include "core/ldap"
-#include "core/jndi"
-#include "payload"
+#include "core/http"
 
 // test1
 // TEST
@@ -15,7 +13,6 @@ def add(a,b){
         return "error";
     }
 }
-print(add(2,8));
-writeFile("1.txt","4ra1n");
-data=readFile("1.txt")
-print(data)
+data = readFile("1.txt");
+print(data);
+data = doGet();

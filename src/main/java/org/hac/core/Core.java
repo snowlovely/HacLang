@@ -1,8 +1,6 @@
 package org.hac.core;
 
 import com.beust.jcommander.JCommander;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.hac.Command;
 import org.hac.ast.ASTree;
 import org.hac.ast.NullStmt;
@@ -19,10 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Core {
-    private static final Logger logger = LogManager.getLogger(Core.class);
-
     public static void start(String[] args) {
-        logger.info("start haclang");
         Command command = new Command();
         JCommander jc = JCommander.newBuilder().addObject(command).build();
         jc.parse(args);
@@ -31,22 +26,22 @@ public class Core {
             return;
         }
         if (StringUtil.isEmpty(command.filename)) {
-            logger.error("filename is null");
+            System.out.println("filename is null");
             return;
         }
         String extName = StringUtil.getExtName(command.filename);
         if (StringUtil.isEmpty(extName)) {
-            logger.error("extension name is null");
+            System.out.println("extension name is null");
             return;
         } else {
             if (!extName.equalsIgnoreCase("h")) {
-                logger.error("error extension name");
+                System.out.println("error extension name");
                 return;
             }
         }
         Path path = Paths.get(command.filename);
         if (!Files.exists(path)) {
-            logger.error("file is not exist");
+            System.out.println("file is not exist");
             return;
         }
         try {

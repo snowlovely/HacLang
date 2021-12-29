@@ -13,7 +13,7 @@ public class IncludeStmt extends ASTList{
     @Override
     public Object eval(Environment env) {
         String includeName = (String) child(0).eval(env);
-        LibManager.addLib(includeName);
+        LibManager.addLib(includeName,env);
         return null;
     }
 }
