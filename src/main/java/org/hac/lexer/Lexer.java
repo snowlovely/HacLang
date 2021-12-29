@@ -1,10 +1,7 @@
 package org.hac.lexer;
 
 import org.hac.exception.ParseException;
-import org.hac.token.IdToken;
-import org.hac.token.NumToken;
-import org.hac.token.StrToken;
-import org.hac.token.Token;
+import org.hac.token.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -45,6 +42,9 @@ public class Lexer {
     private boolean fillQueue(int i) throws ParseException {
         while (queue.size() <= i) {
             Token token = read0();
+            if (token == null) {
+                continue;
+            }
             if (token == Token.EOF) {
                 return false;
             }
@@ -63,44 +63,6 @@ public class Lexer {
         }
     }
 
-    private static boolean isLetter(int c) {
-        return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
-    }
-
-    private static boolean isDigit(int c) {
-        return '0' <= c && c <= '9';
-    }
-
-    private static boolean isSpace(int c) {
-        return c == ' ' || c == '\t';
-    }
-
-    private static boolean isCR(int c) {
-        return c == '\r';
-    }
-
-    private static boolean isLF(int c) {
-        return c == '\n';
-    }
-
-    private static boolean isCalc(int c) {
-        return c == '+' || c == '-' || c == '*' || c == '/' || c == '%';
-    }
-
-    private static boolean isBracket(int c) {
-        return c == '{' || c == '}' ||
-                c == '(' || c == ')' ||
-                c == '[' || c == ']';
-    }
-
-    private static boolean isComma(int c) {
-        return c == ',';
-    }
-
-    private static boolean isSem(int c) {
-        return c == ';';
-    }
-
     @SuppressWarnings("all")
     private void ungetChar(int c) {
         lastChar = c;
@@ -110,32 +72,43 @@ public class Lexer {
         try {
             StringBuilder sb = new StringBuilder();
             int c = getChar();
-            while (isSpace(c)) {
+            while (LexerUtil.isSpace(c)) {
                 c = getChar();
             }
             if (c < 0) {
                 return Token.EOF;
-            } else if (isDigit(c)) {
+            } else if (LexerUtil.isSlash(c)) {
+                c = getChar();
+                if (LexerUtil.isSlash(c)) {
+                    while (!LexerUtil.isLF(c)) {
+                        c = getChar();
+                        sb.append((char) c);
+                    }
+                    LINE_NUMBER++;
+                    return null;
+                }
+            } else if (LexerUtil.isDigit(c)) {
                 sb.append((char) c);
                 c = getChar();
-                while (isDigit(c)) {
+                while (LexerUtil.isDigit(c)) {
                     sb.append((char) c);
                     c = getChar();
                 }
-            } else if (isLetter(c)) {
+            } else if (LexerUtil.isLetter(c)) {
                 sb.append((char) c);
                 c = getChar();
-                while (isLetter(c) || isDigit(c)) {
+                while (LexerUtil.isLetter(c) ||
+                        LexerUtil.isDigit(c)) {
                     sb.append((char) c);
                     c = getChar();
                 }
-            } else if (c == '"') {
+            } else if (LexerUtil.isQuota(c)) {
                 sb.append((char) c);
                 c = getChar();
-                while (c != '"') {
+                while (!LexerUtil.isQuota(c)) {
                     if (c == '\\') {
                         c = getChar();
-                        if (c == '"') {
+                        if (LexerUtil.isQuota(c)) {
                             sb.append((char) c);
                             c = getChar();
                         }
@@ -145,15 +118,15 @@ public class Lexer {
                     }
                 }
                 c = getChar();
-            } else if (isCR(c)) {
+            } else if (LexerUtil.isCR(c)) {
                 c = getChar();
-                if (isLF(c)) {
+                if (LexerUtil.isLF(c)) {
                     LINE_NUMBER++;
                     return new IdToken(LINE_NUMBER - 1, Token.EOL);
                 } else {
                     throw new ParseException("error token");
                 }
-            } else if (isLF(c)) {
+            } else if (LexerUtil.isLF(c)) {
                 LINE_NUMBER++;
                 return new IdToken(LINE_NUMBER - 1, Token.EOL);
             } else if (c == '=') {
@@ -180,13 +153,13 @@ public class Lexer {
                     ungetChar(c);
                     return new IdToken(LINE_NUMBER, "<");
                 }
-            } else if (isCalc(c)) {
+            } else if (LexerUtil.isCalc(c)) {
                 return new IdToken(LINE_NUMBER, String.valueOf((char) c));
-            } else if (isBracket(c)) {
+            } else if (LexerUtil.isBracket(c)) {
                 return new IdToken(LINE_NUMBER, String.valueOf((char) c));
-            } else if (isSem(c)) {
+            } else if (LexerUtil.isSem(c)) {
                 return new IdToken(LINE_NUMBER, ";");
-            } else if (isComma(c)) {
+            } else if (LexerUtil.isComma(c)) {
                 return new IdToken(LINE_NUMBER, ",");
             } else {
                 throw new ParseException("error token");
@@ -195,11 +168,11 @@ public class Lexer {
                 ungetChar(c);
             }
             String temp = sb.toString();
-            if (isLetter(temp.toCharArray()[0])) {
+            if (LexerUtil.isLetter(temp.toCharArray()[0])) {
                 return new IdToken(LINE_NUMBER, temp);
-            } else if (isDigit(temp.toCharArray()[0])) {
+            } else if (LexerUtil.isDigit(temp.toCharArray()[0])) {
                 return new NumToken(LINE_NUMBER, Integer.parseInt(temp));
-            } else if (temp.toCharArray()[0] == '"') {
+            } else if (LexerUtil.isQuota(temp.toCharArray()[0])) {
                 temp = temp.substring(1);
                 return new StrToken(LINE_NUMBER, temp);
             } else {
