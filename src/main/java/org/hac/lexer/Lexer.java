@@ -177,6 +177,15 @@ public class Lexer {
             String temp = sb.toString();
             if (LexerUtil.isLetter(temp.toCharArray()[0]) ||
                     LexerUtil.isPound(temp.toCharArray()[0])) {
+                if (temp.equalsIgnoreCase("true")) {
+                    return new NumToken(LINE_NUMBER, 1);
+                }
+                if (temp.equalsIgnoreCase("false")) {
+                    return new NumToken(LINE_NUMBER, 0);
+                }
+                if (temp.equalsIgnoreCase("null")) {
+                    return new NumToken(LINE_NUMBER, 0);
+                }
                 return new IdToken(LINE_NUMBER, temp);
             } else if (LexerUtil.isDigit(temp.toCharArray()[0])) {
                 return new NumToken(LINE_NUMBER, Integer.parseInt(temp));
