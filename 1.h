@@ -1,4 +1,5 @@
-#include "core/http"
+#include "http"
+#include "string"
 
 // test1
 // TEST
@@ -13,7 +14,11 @@ def add(a,b){
         return "error";
     }
 }
+go print("test");
 data = readFile("1.txt");
 print(data);
-data = doGet("http://www.4399.com",["User-Agent: test"]);
+data = http::doGet("http://www.4399.com",["User-Agent: test"]);
 printArray(data[1])
+if(string::isEmpty(data[1][0])==false){
+    print(123)
+}

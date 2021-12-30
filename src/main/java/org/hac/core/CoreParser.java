@@ -43,11 +43,13 @@ public class CoreParser {
     // statement : "if" expr block [ "else" block ]
     //             | "while" expr block | simple
     //             | "return" factor
+    //             | "go" factor
     Parser statement = statement0.or(
             Parser.rule(IfStmt.class).sep("if").ast(expr).ast(block)
                     .option(Parser.rule().sep("else").ast(block)),
             Parser.rule(WhileStmt.class).sep("while").ast(expr).ast(block),
             Parser.rule(ReturnStmt.class).sep("return").ast(factor),
+            Parser.rule(GoStmt.class).sep("go").ast(factor),
             simple);
     // include : "#include" identifier
     Parser include = Parser.rule(IncludeStmt.class).sep("#include")
@@ -122,6 +124,7 @@ public class CoreParser {
     private void addOperators() {
         operators.add("=", 1, Operators.RIGHT);
         operators.add("==", 2, Operators.LEFT);
+        operators.add("!=", 2, Operators.LEFT);
         operators.add(">", 2, Operators.LEFT);
         operators.add(">=", 2, Operators.LEFT);
         operators.add("<", 2, Operators.LEFT);

@@ -2,7 +2,7 @@ package org.hac.lexer;
 
 public class LexerUtil {
     public static boolean isLetter(int c) {
-        return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
+        return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || c == ':';
     }
 
     public static boolean isDigit(int c) {
@@ -35,8 +35,8 @@ public class LexerUtil {
         return c == ',';
     }
 
-    public static boolean isPound(int c){
-        return c=='#';
+    public static boolean isPound(int c) {
+        return c == '#';
     }
 
     public static boolean isSem(int c) {

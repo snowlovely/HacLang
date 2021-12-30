@@ -98,6 +98,8 @@ public class BinaryExpr extends ASTList {
                 return a % b;
             case "==":
                 return a == b ? TRUE : FALSE;
+            case "!=":
+                return a != b ? TRUE : FALSE;
             case ">":
                 return a > b ? TRUE : FALSE;
             case ">=":

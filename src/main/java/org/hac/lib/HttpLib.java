@@ -14,12 +14,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class HttpLib {
+    private static final String LIB_NAME = "http";
     public static List<NativeFunction> lib = new ArrayList<>();
 
     static {
         try {
             Method doGet = HttpLib.class.getMethod("doGet", String.class, Object[].class);
-            lib.add(new NativeFunction("doGet", doGet));
+            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "doGet", doGet));
         } catch (Exception e) {
             e.printStackTrace();
         }
