@@ -10,6 +10,3 @@ payload = tool::getPowershellCommand("calc.exe");
 print(payload);
 
 tool::exec(payload);
-
-
-

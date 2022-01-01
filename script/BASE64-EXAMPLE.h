@@ -6,14 +6,3 @@ print(enc);
 
 dec = base64::decode(enc);
 printBytes(dec);
-
-
-
-
-
-
-
-
-
-
-
