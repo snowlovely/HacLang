@@ -18,6 +18,8 @@ public class Natives {
                 Object.class);
         append(env, "printArray", Print.class, "printArray",
                 Object[].class);
+        append(env, "printBytes", Print.class, "printBytes",
+                Object.class);
 
         // Util
         append(env, "length", Util.class, "length",
