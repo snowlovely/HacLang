@@ -15,6 +15,7 @@ public class LibManager {
         LIB_LIST.put("http", HttpLib.lib);
         LIB_LIST.put("string", StringLib.lib);
         LIB_LIST.put("base64", Base64Lib.lib);
+        LIB_LIST.put("tool", ToolLib.lib);
     }
 
     public static void addLib(String libName, Environment env) {

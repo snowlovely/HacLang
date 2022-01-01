@@ -1,5 +1,6 @@
 package org.hac.lib;
 
+import org.hac.exception.HacException;
 import org.hac.function.NativeFunction;
 
 import java.lang.reflect.Method;
@@ -14,7 +15,7 @@ public class Base64Lib {
 
     static {
         try {
-            Method encode = Base64Lib.class.getMethod("encode", String.class);
+            Method encode = Base64Lib.class.getMethod("encode", Object.class);
             lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "encode", encode));
             Method decode = Base64Lib.class.getMethod("decode", String.class);
             lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "decode", decode));
@@ -23,8 +24,14 @@ public class Base64Lib {
         }
     }
 
-    public static String encode(String data) {
-        return Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8));
+    public static String encode(Object data) {
+        if (data instanceof String) {
+            return Base64.getEncoder().encodeToString(((String) data).getBytes(StandardCharsets.UTF_8));
+        }
+        if (data instanceof byte[]) {
+            return Base64.getEncoder().encodeToString((byte[]) data);
+        }
+        throw new HacException("base64 encode error");
     }
 
     public static Object decode(String data) {
