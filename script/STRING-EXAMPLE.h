@@ -23,4 +23,3 @@ while i<len {
 // substr
 sub = string::substr(test,1,4);
 print(sub);
-
