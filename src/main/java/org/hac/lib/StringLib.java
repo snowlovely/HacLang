@@ -12,8 +12,14 @@ public class StringLib {
 
     static {
         try {
-            Method doGet = StringLib.class.getMethod("isEmpty", String.class);
-            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "isEmpty", doGet));
+            Method isEmpty = StringLib.class.getMethod("isEmpty", String.class);
+            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "isEmpty", isEmpty));
+            Method contains = StringLib.class.getMethod("contains", String.class, String.class);
+            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "contains", contains));
+            Method split = StringLib.class.getMethod("split", String.class, String.class);
+            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "split", split));
+            Method substr = StringLib.class.getMethod("substr", String.class, int.class, int.class);
+            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "substr", substr));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -27,5 +33,23 @@ public class StringLib {
             return 1;
         }
         return 0;
+    }
+
+    public static int contains(String str, String data) {
+        if (str == null || data == null) {
+            return 0;
+        }
+        if (str.contains(data)) {
+            return 1;
+        }
+        return 0;
+    }
+
+    public static Object[] split(String str, String data) {
+        return str.split(data);
+    }
+
+    public static String substr(String str, int start, int end) {
+        return str.substring(start, end);
     }
 }

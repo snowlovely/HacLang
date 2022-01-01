@@ -1,7 +1,18 @@
 package org.hac.natives;
 
+import java.util.HashMap;
+
 public class Util {
-    public static int length(String s) {
-        return s.length();
+    public static int length(Object o) {
+        if(o instanceof String) {
+            return ((String)o).length();
+        }
+        if(o instanceof Object[]){
+            return ((Object[])o).length;
+        }
+        if(o instanceof HashMap){
+            return ((HashMap<?, ?>)o).size();
+        }
+        return 0;
     }
 }

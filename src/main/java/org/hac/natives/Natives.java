@@ -21,7 +21,7 @@ public class Natives {
 
         // Util
         append(env, "length", Util.class, "length",
-                String.class);
+                Object.class);
 
         // Convert
         append(env, "toInt", Convert.class, "toInt",

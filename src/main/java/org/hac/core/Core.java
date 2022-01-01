@@ -12,6 +12,7 @@ import org.hac.token.Token;
 import org.hac.util.StringUtil;
 
 import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,6 +46,11 @@ public class Core {
             return;
         }
         try {
+            byte[] data = Files.readAllBytes(path);
+            byte[] temp = new byte[data.length + 1];
+            System.arraycopy(data, 0, temp, 0, data.length);
+            temp[data.length] = 10;
+            Files.write(path, temp);
             FileReader reader = new FileReader(path.toFile());
             CoreParser fp = new CoreParser();
             Environment env = new Natives().environment(new ResizableArrayEnv());
