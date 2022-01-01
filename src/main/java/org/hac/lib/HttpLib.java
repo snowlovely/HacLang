@@ -1,76 +1,100 @@
 package org.hac.lib;
 
-import kotlin.Pair;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
+import org.hac.exception.HacException;
 import org.hac.function.NativeFunction;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class HttpLib {
     private static final String LIB_NAME = "http";
     public static List<NativeFunction> lib = new ArrayList<>();
 
     static {
         try {
-            Method doGet = HttpLib.class.getMethod("doGet", String.class, Object[].class);
+            Method doGet = HttpLib.class.getMethod("doGet",
+                    String.class, Object.class);
             lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "doGet", doGet));
+            Method doPost = HttpLib.class.getMethod("doPost",
+                    String.class, Object.class, String.class, String.class);
+            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "doPost", doPost));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static String[][] doGet(String url, Object[] headers) {
-        String[][] data = new String[3][];
+    public static Object doGet(String url, Object headers) {
+        checkMap(headers);
         try {
+            HashMap<Object, Object> returnValue = new HashMap<>();
             OkHttpClient client = new OkHttpClient();
             Request.Builder builder = new Request.Builder().url(url).get();
-            for (Object obj : headers) {
-                String[] split = obj.toString().split(": ");
-                String key = split[0];
-                StringBuilder value;
-                if (split.length == 2) {
-                    value = new StringBuilder(obj.toString().split(": ")[1]);
-                } else if (split.length < 2) {
-                    break;
-                } else {
-                    value = new StringBuilder();
-                    for (int i = 0; i < split.length; i++) {
-                        if (i != split.length - 1) {
-                            value.append(split[i]).append(": ");
-                        } else {
-                            value.append(split[i]);
-                        }
-                    }
-                }
-                builder.addHeader(key, value.toString());
-            }
+            resolveHeaders(headers, builder);
             Request req = builder.build();
             Call call = client.newCall(req);
             Response response = call.execute();
-            data[0] = new String[1];
-            data[0][0] = Integer.toString(response.code());
-            Iterator<Pair<String, String>> iterable = response.headers().iterator();
-            data[1] = new String[response.headers().size()];
-            int i = 0;
-            while (iterable.hasNext()) {
-                Pair<String, String> temp = iterable.next();
-                data[1][i] = temp.getFirst() + ": " + temp.getSecond();
-                i++;
-            }
-            data[2] = new String[1];
-            data[2][0] = Objects.requireNonNull(response.body()).string();
-            response.close();
-            return data;
+            getResponse(returnValue, response);
+            return returnValue;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return data;
+        return null;
+    }
+
+    public static Object doPost(String url, Object headers, String body, String contentType) {
+        checkMap(headers);
+        try {
+            HashMap<Object, Object> returnValue = new HashMap<>();
+            OkHttpClient client = new OkHttpClient();
+            Request.Builder builder = new Request.Builder().url(url);
+            if (contentType.equals("form")) {
+                contentType = "application/x-www-form-urlencoded";
+            } else if (contentType.equals("json")) {
+                contentType = "application/json";
+            }
+            MediaType type = MediaType.parse(contentType);
+            RequestBody requestBody = RequestBody.create(type, body);
+            builder.post(requestBody);
+            resolveHeaders(headers, builder);
+            Request req = builder.build();
+            Call call = client.newCall(req);
+            Response response = call.execute();
+            getResponse(returnValue, response);
+            return returnValue;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static void checkMap(Object headers) {
+        if (!(headers instanceof HashMap)) {
+            throw new HacException("headers error");
+        }
+    }
+
+    private static void resolveHeaders(Object headers, Request.Builder builder) {
+        HashMap<Object, Object> headersMap = (HashMap<Object, Object>) headers;
+        for (Map.Entry<Object, Object> obj : headersMap.entrySet()) {
+            String key = (String) obj.getKey();
+            String value = (String) obj.getValue();
+            builder.addHeader(key, value);
+        }
+    }
+
+    private static void getResponse(HashMap<Object, Object> returnValue,
+                                    Response response) throws IOException {
+        returnValue.put("code", response.code());
+        Set<String> names = response.headers().names();
+        HashMap<Object, Object> retHeaders = new HashMap<>();
+        for (String name : names) {
+            retHeaders.put(name, response.headers().get(name));
+        }
+        returnValue.put("body", Objects.requireNonNull(response.body()).string());
+        returnValue.put("headers", retHeaders);
+        response.close();
     }
 }

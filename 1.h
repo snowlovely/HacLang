@@ -1,18 +1,16 @@
 #include "http"
 #include "string"
 
-// request
-def request(url){
-    go print("do request");
-    data = http::doGet(url,["User-Agent: 4ra1n"]);
-    if(string::isEmpty(data[2][0])==false){
-        return data[2][0];
-    }else{
-        return null;
-    }
+map = newMap();
+putMap(map,"User-Agent","test");
+data = http::doPost("http://www.4399.com",map,"data=test%23name=who","form");
+code = getMap(data,"code");
+print(code)
+if toInt(code)==200{
+    print("success");
 }
-url = readFile("1.txt");
-print(url);
-data=request(url);
-print(data);
+headers = getMap(data,"headers")
+cookie = getMap(headers,"Server")
+print(cookie);
+
 

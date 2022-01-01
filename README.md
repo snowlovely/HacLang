@@ -1,6 +1,10 @@
 # HacLang
 
-一个基于Java的脚本语言，语法类似Python
+## 介绍
+
+这是什么？
+
+一个基于Java的脚本语言，打算加入一些Java安全相关的功能，语法类似Python
 
 支持函数
 ```cpp

@@ -1,6 +1,6 @@
 package org.hac.lexer;
 
-public class LexerUtil {
+public class LexerHelper {
     public static boolean isLetter(int c) {
         return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || c == ':';
     }

@@ -72,50 +72,50 @@ public class Lexer {
         try {
             StringBuilder sb = new StringBuilder();
             int c = getChar();
-            while (LexerUtil.isSpace(c)) {
+            while (LexerHelper.isSpace(c)) {
                 c = getChar();
             }
             if (c < 0) {
                 return Token.EOF;
-            } else if (LexerUtil.isPound(c)) {
+            } else if (LexerHelper.isPound(c)) {
                 sb.append((char) c);
                 c = getChar();
-                while (LexerUtil.isLetter(c)) {
+                while (LexerHelper.isLetter(c)) {
                     sb.append((char) c);
                     c = getChar();
                 }
-            } else if (LexerUtil.isSlash(c)) {
+            } else if (LexerHelper.isSlash(c)) {
                 c = getChar();
-                if (LexerUtil.isSlash(c)) {
-                    while (!LexerUtil.isLF(c)) {
+                if (LexerHelper.isSlash(c)) {
+                    while (!LexerHelper.isLF(c)) {
                         c = getChar();
                         sb.append((char) c);
                     }
                     LINE_NUMBER++;
                     return null;
                 }
-            } else if (LexerUtil.isDigit(c)) {
+            } else if (LexerHelper.isDigit(c)) {
                 sb.append((char) c);
                 c = getChar();
-                while (LexerUtil.isDigit(c)) {
+                while (LexerHelper.isDigit(c)) {
                     sb.append((char) c);
                     c = getChar();
                 }
-            } else if (LexerUtil.isLetter(c)) {
+            } else if (LexerHelper.isLetter(c)) {
                 sb.append((char) c);
                 c = getChar();
-                while (LexerUtil.isLetter(c) ||
-                        LexerUtil.isDigit(c)) {
+                while (LexerHelper.isLetter(c) ||
+                        LexerHelper.isDigit(c)) {
                     sb.append((char) c);
                     c = getChar();
                 }
-            } else if (LexerUtil.isQuota(c)) {
+            } else if (LexerHelper.isQuota(c)) {
                 sb.append((char) c);
                 c = getChar();
-                while (!LexerUtil.isQuota(c)) {
+                while (!LexerHelper.isQuota(c)) {
                     if (c == '\\') {
                         c = getChar();
-                        if (LexerUtil.isQuota(c)) {
+                        if (LexerHelper.isQuota(c)) {
                             sb.append((char) c);
                             c = getChar();
                         }
@@ -125,15 +125,15 @@ public class Lexer {
                     }
                 }
                 c = getChar();
-            } else if (LexerUtil.isCR(c)) {
+            } else if (LexerHelper.isCR(c)) {
                 c = getChar();
-                if (LexerUtil.isLF(c)) {
+                if (LexerHelper.isLF(c)) {
                     LINE_NUMBER++;
                     return new IdToken(LINE_NUMBER - 1, Token.EOL);
                 } else {
                     throw new ParseException("error token");
                 }
-            } else if (LexerUtil.isLF(c)) {
+            } else if (LexerHelper.isLF(c)) {
                 LINE_NUMBER++;
                 return new IdToken(LINE_NUMBER - 1, Token.EOL);
             } else if (c == '=') {
@@ -160,13 +160,13 @@ public class Lexer {
                     ungetChar(c);
                     return new IdToken(LINE_NUMBER, "<");
                 }
-            } else if (LexerUtil.isCalc(c)) {
+            } else if (LexerHelper.isCalc(c)) {
                 return new IdToken(LINE_NUMBER, String.valueOf((char) c));
-            } else if (LexerUtil.isBracket(c)) {
+            } else if (LexerHelper.isBracket(c)) {
                 return new IdToken(LINE_NUMBER, String.valueOf((char) c));
-            } else if (LexerUtil.isSem(c)) {
+            } else if (LexerHelper.isSem(c)) {
                 return new IdToken(LINE_NUMBER, ";");
-            } else if (LexerUtil.isComma(c)) {
+            } else if (LexerHelper.isComma(c)) {
                 return new IdToken(LINE_NUMBER, ",");
             } else {
                 throw new ParseException("error token");
@@ -175,8 +175,8 @@ public class Lexer {
                 ungetChar(c);
             }
             String temp = sb.toString();
-            if (LexerUtil.isLetter(temp.toCharArray()[0]) ||
-                    LexerUtil.isPound(temp.toCharArray()[0])) {
+            if (LexerHelper.isLetter(temp.toCharArray()[0]) ||
+                    LexerHelper.isPound(temp.toCharArray()[0])) {
                 if (temp.equalsIgnoreCase("true")) {
                     return new NumToken(LINE_NUMBER, 1);
                 }
@@ -187,9 +187,9 @@ public class Lexer {
                     return new NumToken(LINE_NUMBER, 0);
                 }
                 return new IdToken(LINE_NUMBER, temp);
-            } else if (LexerUtil.isDigit(temp.toCharArray()[0])) {
+            } else if (LexerHelper.isDigit(temp.toCharArray()[0])) {
                 return new NumToken(LINE_NUMBER, Integer.parseInt(temp));
-            } else if (LexerUtil.isQuota(temp.toCharArray()[0])) {
+            } else if (LexerHelper.isQuota(temp.toCharArray()[0])) {
                 temp = temp.substring(1);
                 return new StrToken(LINE_NUMBER, temp);
             } else {
