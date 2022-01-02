@@ -3,6 +3,7 @@ package org.hac.lib;
 import okhttp3.*;
 import org.hac.exception.HacException;
 import org.hac.function.NativeFunction;
+import org.hac.util.StringUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -21,6 +22,8 @@ public class HttpLib {
             Method doPost = HttpLib.class.getMethod("doPost",
                     String.class, Object.class, String.class, String.class);
             lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "doPost", doPost));
+            Method doRequest = HttpLib.class.getMethod("doRequest", String.class);
+            lib.add(new NativeFunction(LIB_NAME + LibManager.SEP + "doRequest", doRequest));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,6 +61,76 @@ public class HttpLib {
             MediaType type = MediaType.parse(contentType);
             RequestBody requestBody = RequestBody.create(type, body);
             builder.post(requestBody);
+            resolveHeaders(headers, builder);
+            Request req = builder.build();
+            Call call = client.newCall(req);
+            Response response = call.execute();
+            getResponse(returnValue, response);
+            return returnValue;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Object doRequest(String request) {
+        try {
+            String lineSep = System.lineSeparator();
+            String[] lines = request.split(lineSep + lineSep);
+            StringBuilder requestBodyBuilder = new StringBuilder();
+            if (lines.length == 1) {
+                requestBodyBuilder = null;
+            } else if (lines.length > 1) {
+                for (int i = 1; i < lines.length; i++) {
+                    requestBodyBuilder.append(lines[i]);
+                }
+            } else {
+                throw new HacException("request data error");
+            }
+            String requestBody = null;
+            if (requestBodyBuilder != null) {
+                requestBody = requestBodyBuilder.toString().trim();
+            }
+
+            String firstContent = lines[0];
+            String[] splits = firstContent.split(lineSep);
+            if (splits.length < 1) {
+                throw new HacException("request data error");
+            }
+            String info = splits[0];
+            String[] temp = info.split(" ");
+            String requestMethod = temp[0];
+            String path = temp[1];
+
+            HashMap<Object, Object> headers = new HashMap<>();
+            for (int i = 1; i < splits.length; i++) {
+                String[] innerTemp = splits[i].split(": ");
+                String key = innerTemp[0];
+                StringBuilder innerBuilder = new StringBuilder();
+                for (int j = 1; j < innerTemp.length; j++) {
+                    innerBuilder.append(innerTemp[j]);
+                    if (j != innerTemp.length - 1) {
+                        innerBuilder.append(": ");
+                    }
+                }
+                String value = innerBuilder.toString();
+                headers.put(key, value);
+            }
+            String contentType = (String) headers.remove("Content-Type");
+            String host = (String) headers.remove("Host");
+            String url = "http" + "://" + host + path;
+            HashMap<Object, Object> returnValue = new HashMap<>();
+            OkHttpClient client = new OkHttpClient();
+            Request.Builder builder = new Request.Builder().url(url);
+            if (!StringUtil.isEmpty(contentType) &&
+                    !StringUtil.isEmpty(requestBody) &&
+                    !requestMethod.equalsIgnoreCase("GET")) {
+                MediaType type = MediaType.parse(contentType);
+                RequestBody body = RequestBody.create(type, requestBody);
+                builder.method(requestMethod, body);
+            } else {
+                builder.method(requestMethod, null);
+            }
             resolveHeaders(headers, builder);
             Request req = builder.build();
             Call call = client.newCall(req);

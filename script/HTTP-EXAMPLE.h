@@ -30,3 +30,7 @@ responseBody = getMap(response,"body");
 if string::contains(responseBody,"Tomcat")==true {
     print("Tomcat")
 }
+
+// use request string
+req = readFile("./script/1.txt");
+http::doRequest(req);
