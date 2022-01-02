@@ -15,6 +15,7 @@ public class Threads {
     }
 
     public static void stopAll() {
-        System.exit(0);
+        // TODO
+        // System.exit(0);
     }
 }
