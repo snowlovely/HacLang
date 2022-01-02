@@ -7,8 +7,15 @@ headers = newMap();
 putMap(headers,"User-Agent","4ra1n");
 // url string
 url = "http://127.0.0.1:8080";
-// do request
+// do get request
 response = http::doGet(url,headers);
+
+// request body
+body = "username=1&password=2"
+// application/x-www-form-urlencoded alias
+contentType = "form";
+// do post request
+http::doPost(url,headers,body,contentType);
 
 // response code
 code = getMap(response,"code");
