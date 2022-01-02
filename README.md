@@ -2,7 +2,7 @@
 
 ## 介绍
 
-![](https://github.com/EmYiQing/HacLang/blob/master/img/1.png)
+![](https://github.com/EmYiQing/HacLang/blob/master/img/logo.png)
 
 这是一个基于`Java`的脚本语言，主要面向渗透测试与安全研究人员，提供了一些简单的内置库
 1. 实现基于状态机的词法分析
