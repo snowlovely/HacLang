@@ -1,5 +1,8 @@
 # HacLang
 
+![](https://img.shields.io/badge/build-passing-brightgreen)
+![](https://img.shields.io/badge/Java-8-red)
+
 ## 介绍
 
 ![](https://github.com/EmYiQing/HacLang/blob/master/img/logo.png)
