@@ -2,10 +2,14 @@
 
 ## 介绍
 
-这是一个基于`Java`的脚本语言，主要面向渗透测试与安全研究人员，提供了一些简单高效的内置库
+![](https://github.com/EmYiQing/HacLang/blob/master/img/1.png)
+
+这是一个基于`Java`的脚本语言，主要面向渗透测试与安全研究人员，提供了一些简单的内置库
 1. 实现基于状态机的词法分析
 2. 巴科斯范式（BNF）生成抽象语法树
 3. 递归遍历抽象语法树执行代码
+
+为什么取名为`HacLang`：A Language For Hackers
 
 ## 基础
 
