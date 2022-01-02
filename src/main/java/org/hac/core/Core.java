@@ -64,6 +64,7 @@ public class Core {
                     t.eval(env);
                 }
             }
+            Threads.stopAll();
         } catch (Exception e) {
             e.printStackTrace();
         }

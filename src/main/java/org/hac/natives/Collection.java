@@ -1,5 +1,6 @@
 package org.hac.natives;
 
+import org.hac.env.Environment;
 import org.hac.exception.HacException;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class Collection {
             throw new HacException("map error");
         }
         ((HashMap<Object, Object>) map).put(key, value);
-        return 0;
+        return Environment.TRUE;
     }
 
     public static Object getMap(Object map, Object key) {
@@ -30,6 +31,6 @@ public class Collection {
             throw new HacException("map error");
         }
         ((HashMap<Object, Object>) map).clear();
-        return 0;
+        return Environment.TRUE;
     }
 }

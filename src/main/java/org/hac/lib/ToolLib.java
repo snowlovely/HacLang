@@ -1,6 +1,5 @@
 package org.hac.lib;
 
-import com.sun.org.apache.bcel.internal.classfile.Utility;
 import org.hac.function.NativeFunction;
 import org.hac.util.EncodeUtil;
 
@@ -55,6 +54,4 @@ public class ToolLib {
     public static String getStringCommand(String cmd) {
         return EncodeUtil.getStringPayload(cmd);
     }
-
-
 }

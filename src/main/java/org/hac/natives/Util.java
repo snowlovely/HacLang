@@ -1,5 +1,7 @@
 package org.hac.natives;
 
+import org.hac.env.Environment;
+
 import java.util.HashMap;
 
 public class Util {
@@ -13,6 +15,6 @@ public class Util {
         if(o instanceof HashMap){
             return ((HashMap<?, ?>)o).size();
         }
-        return 0;
+        return Environment.FALSE;
     }
 }

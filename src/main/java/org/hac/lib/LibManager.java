@@ -16,6 +16,7 @@ public class LibManager {
         LIB_LIST.put("string", StringLib.lib);
         LIB_LIST.put("base64", Base64Lib.lib);
         LIB_LIST.put("tool", ToolLib.lib);
+        LIB_LIST.put("ldap", LdapLib.lib);
     }
 
     public static void addLib(String libName, Environment env) {

@@ -1,5 +1,6 @@
 package org.hac.lib;
 
+import org.hac.env.Environment;
 import org.hac.function.NativeFunction;
 
 import java.lang.reflect.Method;
@@ -27,22 +28,22 @@ public class StringLib {
 
     public static int isEmpty(String data) {
         if (data == null) {
-            return 1;
+            return Environment.TRUE;
         }
         if (data.trim().equals("")) {
-            return 1;
+            return Environment.TRUE;
         }
-        return 0;
+        return Environment.FALSE;
     }
 
     public static int contains(String str, String data) {
         if (str == null || data == null) {
-            return 0;
+            return Environment.FALSE;
         }
         if (str.contains(data)) {
-            return 1;
+            return Environment.TRUE;
         }
-        return 0;
+        return Environment.FALSE;
     }
 
     public static Object[] split(String str, String data) {
