@@ -16,17 +16,18 @@ public class Natives {
         // Print
         append(env, "print", Print.class, "print",
                 Object.class);
-        append(env, "printArray", Print.class, "printArray",
-                Object[].class);
-        append(env, "printBytes", Print.class, "printBytes",
-                Object.class);
 
         // Util
         append(env, "length", Util.class, "length",
                 Object.class);
 
+        // Input
+        append(env, "input", Input.class, "input");
+
         // Convert
         append(env, "toInt", Convert.class, "toInt",
+                Object.class);
+        append(env, "toStr", Convert.class, "toStr",
                 Object.class);
 
         // Time

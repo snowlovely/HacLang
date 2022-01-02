@@ -8,6 +8,15 @@
     <artifactId>HacLang</artifactId>
     <version>1.0</version>
 
+    <developers>
+        <developer>
+            <id>4ra1n</id>
+            <name>4ra1n</name>
+            <email>emyiqing@gmail.com</email>
+            <url>https://4ra1n.love</url>
+        </developer>
+    </developers>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

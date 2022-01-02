@@ -10,4 +10,12 @@ public class Convert {
             throw new NumberFormatException(value.toString());
         }
     }
+
+    public static String toStr(Object value) {
+        if (value instanceof byte[]) {
+            return new String((byte[]) value);
+        } else {
+            return value.toString();
+        }
+    }
 }

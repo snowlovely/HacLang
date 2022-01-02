@@ -1,42 +1,42 @@
 package org.hac.natives;
 
 import org.hac.env.Environment;
-import org.hac.exception.HacException;
-
-import java.util.Arrays;
 
 public class Print {
     public static int print(Object obj) {
         if (obj == null) {
             System.out.println("null");
-            return Environment.TRUE;
         }
-        System.out.println(obj.toString());
-        return Environment.FALSE;
+        if (obj instanceof byte[]) {
+            byte[] data = (byte[]) obj;
+            StringBuilder sb = new StringBuilder();
+            sb.append("bytes [");
+            Byte[] newData = new Byte[data.length];
+            for (int i = 0; i < data.length; i++) {
+                newData[i] = data[i];
+            }
+            buildOutput(sb, newData);
+            System.out.println(sb);
+        } else if (obj instanceof Object[]) {
+            Object[] data = (Object[]) obj;
+            StringBuilder sb = new StringBuilder();
+            sb.append("array [");
+            buildOutput(sb, data);
+            System.out.println(sb);
+        } else {
+            System.out.println(obj);
+        }
+        return Environment.TRUE;
     }
 
-    public static int printArray(Object[] obj) {
-        if (obj == null) {
-            System.out.println("null");
-            return Environment.TRUE;
-        }
-        System.out.println(Arrays.toString(obj));
-        return Environment.FALSE;
-    }
-
-    public static int printBytes(Object o) {
-        if (!(o instanceof byte[])) {
-            throw new HacException("print bytes error");
-        }
-        byte[] data = (byte[]) o;
-        StringBuilder sb = new StringBuilder();
-        sb.append("[ ");
-        for (Byte b : data) {
-            sb.append(b);
-            sb.append(" ");
+    private static void buildOutput(StringBuilder sb, Object[] data) {
+        int length = data.length;
+        for (int i = 0; i < length; i++) {
+            sb.append(data[i]);
+            if (i != length - 1) {
+                sb.append(",");
+            }
         }
         sb.append("]");
-        print(sb.toString());
-        return Environment.TRUE;
     }
 }
